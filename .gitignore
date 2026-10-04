@@ -5,14 +5,13 @@ backup_before_fix_*/
 tailwind/tailwindcss.exe
 
 # ไฟล์ของผู้ใช้ (ข้อมูลส่วนตัวของนิสิต) และไฟล์ชั่วคราว
-test/production-version/Docs/
-test/production-version/Uploads/
-test/App_Data/UploadTemp/
-test/App_Data/submissions/
-test/production-version/_shot_*.html
+website/app/Docs/
+website/App_Data/UploadTemp/
+website/App_Data/submissions/
+website/app/_shot_*.html
 
 # Visual Studio / IIS Express
 .vs/
-test/.vs/
+website/.vs/
 *.user
 *.suo

@@ -1,8 +1,8 @@
-// Tailwind สำหรับเว็บ ASP.NET (production-version)
+// Tailwind สำหรับเว็บ ASP.NET (website/app)
 // ใช้ prefix "tw-" และปิด preflight เพื่อไม่ให้ชนกับ Bootstrap ที่ DevExpress ใช้อยู่
 // สีทั้งหมดอ้างตัวแปร CSS (--c-*) ใน input.css ซึ่งสลับค่าตามธีมมืด/สว่าง (class "dark" บน <html>)
 //
-// build:  ดับเบิลคลิก tailwind\build.cmd
+// build:  double-click tailwind/build.cmd  (output: website/app/assets/css/tailwind.css)
 const v = (name) => `rgb(var(--c-${name}) / <alpha-value>)`
 
 module.exports = {
@@ -14,9 +14,9 @@ module.exports = {
   content: {
     relative: true,
     files: [
-      '../test/production-version/*.{aspx,master,vb}',
-      '../test/production-version/assets/js/ui.js',
-      '../test/App_Code/*.vb',
+      '../website/app/*.{aspx,master,vb}',
+      '../website/app/assets/js/ui.js',
+      '../website/App_Code/*.vb',
     ],
   },
   theme: {
