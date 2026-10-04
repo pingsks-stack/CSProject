@@ -14,6 +14,7 @@ Partial Class production_version_Main_Doc
             "(SELECT COUNT(*) FROM Permission_TB t WHERE t.DocID = m.DocID AND t.Urole = N'2') AS Teachers, " &
             "(SELECT COUNT(*) FROM SubAdd_AJ_TB s WHERE s.DocID = m.DocID AND s.Status = N'รอการยืนยัน') AS Invites, " &
             "(SELECT COUNT(*) FROM Doc_File f WHERE f.DocID = m.DocID) AS Files, " &
+            "(SELECT COUNT(DISTINCT s.Chapter) FROM Doc_Submission s WHERE s.DocID = m.DocID) AS Chapters, " &
             "(SELECT COUNT(*) FROM Doc_List_TB c WHERE c.DocID = m.DocID) AS Codes " &
             "FROM MAS_DOC m WHERE m.DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Email) ORDER BY m.Doc_dt_Save DESC",
             Shell.P("@Email", email))
@@ -43,6 +44,7 @@ Partial Class production_version_Main_Doc
             ElseIf failed Then
                 sb.Append("<a href=""Sent_PJ.aspx?DocID=" & id & """ class=""btn btn-warning btn-sm""><i data-lucide=""rotate-ccw"" class=""tw-mr-1 tw-h-4 tw-w-4""></i>ส่งโครงงานใหม่</a>")
             End If
+            sb.Append("<a href=""Chapters.aspx?DocID=" & id & """ class=""btn btn-secondary btn-sm""><i data-lucide=""files"" class=""tw-mr-1 tw-h-4 tw-w-4""></i>เอกสารรายบท</a>")
             sb.Append("<a href=""CodeEdit.aspx?DocID=" & id & """ class=""btn btn-secondary btn-sm""><i data-lucide=""file-code"" class=""tw-mr-1 tw-h-4 tw-w-4""></i>ซอร์สโค้ด</a>")
             sb.Append("<a href=""MAS_Doc.aspx?DocID=" & id & """ class=""btn btn-primary btn-sm""><i data-lucide=""settings-2"" class=""tw-mr-1 tw-h-4 tw-w-4""></i>จัดการโครงงาน</a>")
             sb.Append("</div></div>")
@@ -52,7 +54,8 @@ Partial Class production_version_Main_Doc
             sb.Append(Stepper("folder-plus", "สร้างโครงงาน", "เรียบร้อย", True))
             sb.Append(Stepper("graduation-cap", "อาจารย์ " & teachers & "/3",
                               If(CInt(r("Invites")) > 0, "รอตอบรับ " & r("Invites") & " คำเชิญ", If(teachers >= 3, "ครบแล้ว", "เพิ่มได้ที่หน้าจัดการ")), teachers >= 3))
-            sb.Append(Stepper("file-up", "เอกสาร " & files & " ไฟล์", If(files > 0, "อัปโหลดแล้ว", "ยังไม่มีไฟล์"), files > 0))
+            Dim nChapters As Integer = CInt(r("Chapters"))
+            sb.Append(Stepper("file-up", "เอกสาร " & nChapters & "/" & Chapters.List.Length & " บท", If(nChapters > 0, "ส่งแล้ว " & nChapters & " บท", If(files > 0, "มีไฟล์เดิม " & files & " ไฟล์", "ยังไม่ส่ง")), nChapters >= Chapters.List.Length))
             sb.Append(Stepper("code-xml", "ซอร์สโค้ด " & codes & " ฟังก์ชัน", If(codes > 0, "เพิ่มแล้ว", "ยังไม่มีโค้ด"), codes > 0))
             sb.Append(Stepper("badge-check", "ผลการพิจารณา", If(passed, "ผ่านครบ 3/3", If(failed, "ไม่ผ่าน", "รออาจารย์พิจารณา")), passed))
             sb.Append("</div></div>")

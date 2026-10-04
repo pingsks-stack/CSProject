@@ -77,6 +77,13 @@ Public Module Shell
                 "N'Doc_Student_Infor.aspx?DocID=' + CAST(c.DocID AS nvarchar(20)) " &
                 "FROM Status_Change_TB c " &
                 "WHERE c.Status = N'รอการยืนยัน' AND c.DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Email AND Urole = N'2') " &
+                "UNION ALL " &
+                "SELECT N'file-check', N'เอกสารรอตรวจ: ' + s.Chapter + N' v' + CAST(s.Version AS nvarchar(10)), m.Doc_Name, s.Uploaded_At, " &
+                "N'Chapters.aspx?DocID=' + CAST(s.DocID AS nvarchar(20)) " &
+                "FROM Doc_Submission s JOIN MAS_DOC m ON m.DocID = s.DocID " &
+                "WHERE s.DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Email AND Urole = N'2') " &
+                "AND s.Version = (SELECT MAX(x.Version) FROM Doc_Submission x WHERE x.DocID = s.DocID AND x.Chapter = s.Chapter) " &
+                "AND NOT EXISTS (SELECT 1 FROM Doc_Review r WHERE r.Sub_ID = s.Sub_ID AND r.Reviewer_Email = @Email) " &
                 ") x ORDER BY At DESC ", P("@Email", email))
     End Function
 
@@ -121,9 +128,15 @@ Public Module Shell
                 "SELECT N'message-square', N'ข้อความใหม่จาก ' + ISNULL(t.Post_Name_RS, N'อาจารย์'), LEFT(ISNULL(t.Comment_Text, N''), 80), t.Date_Save, N'Chat.aspx?with=' + t.Email_AJ " &
                 "FROM Talk_TB t " &
                 "WHERE t.Email_NS = @Email AND t.Sender_Email <> @Email AND t.Is_Read = 0 " &
+                "UNION ALL " &
+                "SELECT CASE WHEN r.Verdict = N'ผ่าน' THEN N'check-circle' ELSE N'alert-circle' END, " &
+                "ISNULL(r.Reviewer_Name, N'อาจารย์') + CASE WHEN r.Verdict = N'ผ่าน' THEN N' ให้ผ่าน ' ELSE N' ขอให้แก้ไข ' END + s.Chapter, " &
+                "LEFT(ISNULL(r.Comment, N''), 80), r.Created_At, N'Chapters.aspx?DocID=' + CAST(s.DocID AS nvarchar(20)) " &
+                "FROM Doc_Review r JOIN Doc_Submission s ON s.Sub_ID = r.Sub_ID " &
+                "WHERE r.Is_Read = 0 AND s.DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Email) " &
                 ") x ORDER BY At DESC ", P("@Email", email))
             ' จุดแดงบนกระดิ่งของนิสิต = ข้อความแชทที่ยังไม่อ่าน
-            pending = dt.Rows.Cast(Of DataRow)().Count(Function(r) Convert.ToString(r("Url")).StartsWith("Chat.aspx"))
+            pending = dt.Rows.Cast(Of DataRow)().Count(Function(r) Convert.ToString(r("Url")).StartsWith("Chat.aspx") OrElse Convert.ToString(r("Url")).StartsWith("Chapters.aspx"))
         End If
 
         If dt.Rows.Count = 0 Then

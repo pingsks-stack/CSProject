@@ -4,7 +4,7 @@ Imports System.Text
 Partial Class production_version_dashboard
     Inherits System.Web.UI.Page
 
-    Protected FirstName, KpiHtml, MyProjectsHtml, ActivityHtml As String
+    Protected FirstName, KpiHtml, MyProjectsHtml, ActivityHtml, DeadlineHtml As String
     Protected MonthLabels, MonthFiles, MonthEdits, TypeLabels, TypeValues As String
 
     ' โครงงานที่ผู้ใช้เป็นสมาชิก
@@ -56,6 +56,45 @@ Partial Class production_version_dashboard
         MyProjectsHtml = sb.ToString()
 
         ActivityHtml = Dash.Activity(Dash.ActivitySql(MyDocs, 7), Shell.P("@Email", email))
+        DeadlineHtml = BuildDeadlines(email)
     End Sub
+
+    ' กำหนดส่งของโครงงานที่เป็นสมาชิก: แสดงที่ยังไม่ส่ง (เลยกำหนด/ใกล้ถึง) และที่ส่งแล้ว
+    Private Function BuildDeadlines(email As String) As String
+        Dim dt = Shell.Query(
+            "SELECT m.DocID, m.Doc_Name, d.Chapter, d.Due_Date, d.Note, " &
+            "(SELECT MAX(s.Version) FROM Doc_Submission s WHERE s.DocID = m.DocID AND s.Chapter = d.Chapter) AS LastVersion " &
+            "FROM MAS_DOC m JOIN Deadline_TB d ON d.Class_Year_No = m.Class_Year_No " &
+            "WHERE m.DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Email) ORDER BY d.Due_Date",
+            Shell.P("@Email", email))
+        If dt.Rows.Count = 0 Then Return ""
+
+        Dim overdue As Integer = 0
+        Dim sb As New StringBuilder()
+        For Each r As DataRow In dt.Rows
+            Dim due As DateTime = CDate(r("Due_Date"))
+            Dim days As Integer = CInt((due.Date - DateTime.Today).TotalDays)
+            Dim sent As Boolean = Not IsDBNull(r("LastVersion"))
+            Dim tone As String, text As String
+            If sent Then
+                tone = "ok" : text = "ส่งแล้ว v" & Convert.ToString(r("LastVersion"))
+            ElseIf days < 0 Then
+                tone = "bad" : text = "เลยกำหนด " & -days & " วัน" : overdue += 1
+            ElseIf days <= 7 Then
+                tone = "warn" : text = If(days = 0, "ครบกำหนดวันนี้", "อีก " & days & " วัน")
+            Else
+                tone = "info" : text = "อีก " & days & " วัน"
+            End If
+            sb.Append("<a href=""Chapters.aspx?DocID=" & r("DocID") & """ class=""tw-flex tw-items-center tw-gap-3 tw-border-b tw-border-line tw-px-5 tw-py-3 tw-no-underline last:tw-border-b-0 hover:tw-bg-surface-2 hover:tw-no-underline"">")
+            sb.Append("<span class=""kpi-icon tw-bg-" & tone & "/15 tw-text-" & tone & """><i data-lucide=""" & If(sent, "check", "calendar-clock") & """></i></span>")
+            sb.Append("<div class=""tw-min-w-0 tw-flex-1""><div class=""tw-font-semibold tw-text-ink"">" & HttpUtility.HtmlEncode(Convert.ToString(r("Chapter"))) & "</div>")
+            sb.Append("<div class=""tw-truncate tw-text-xs tw-text-muted"">กำหนดส่ง " & Chapters.ThaiDate(due) & If(Convert.ToString(r("Note")) <> "", " · " & HttpUtility.HtmlEncode(Convert.ToString(r("Note"))), "") & "</div></div>")
+            sb.Append("<span class=""badge-soft tw-bg-" & tone & "/15 tw-text-" & tone & """>" & HttpUtility.HtmlEncode(text) & "</span></a>")
+        Next
+        Return "<div class=""panel tw-mt-4 tw-overflow-hidden""><div class=""panel-head""><div><h3 class=""panel-title"">กำหนดส่งเอกสาร</h3><p class=""panel-sub"">" &
+               If(overdue > 0, "<span class=""tw-text-bad"">มี " & overdue & " บทที่เลยกำหนดแล้ว</span>", "ตามปีการศึกษาของโครงงาน") &
+               "</p></div><a href=""Chapters.aspx?DocID=" & dt.Rows(0)("DocID") & """ class=""btn-accent""><i data-lucide=""upload""></i>ส่งเอกสาร</a></div>" &
+               "<div class=""tw-grid md:tw-grid-cols-2"">" & sb.ToString() & "</div></div>"
+    End Function
 
 End Class

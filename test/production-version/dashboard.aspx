@@ -17,6 +17,8 @@
         <%= KpiHtml %>
     </div>
 
+    <%= DeadlineHtml %>
+
     <div class="tw-mt-4 tw-grid tw-gap-4 xl:tw-grid-cols-3">
         <div class="panel xl:tw-col-span-2">
             <div class="panel-head"><div><h3 class="panel-title">ความเคลื่อนไหวในโครงงานของฉัน</h3><p class="panel-sub">การอัปโหลดไฟล์และการแก้ไขชื่อ · 12 เดือนล่าสุดที่มีข้อมูล</p></div></div>

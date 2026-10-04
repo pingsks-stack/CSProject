@@ -66,7 +66,8 @@
             <button type="button" class="nav-group-title" data-group-toggle><span class="hide-mini">จัดการระบบ</span><i data-lucide="chevron-down" class="hide-mini tw-h-3.5 tw-w-3.5"></i></button>
             <div class="nav-group-items tw-space-y-0.5">
                 <a href="Admin_infor.aspx" class="nav-link-item" title="โครงงานทั้งหมด"><i data-lucide="folder-kanban"></i><span class="hide-mini">โครงงานทั้งหมด</span></a>
-                <a href="infor_user.aspx" class="nav-link-item" title="ผู้ใช้งาน"><i data-lucide="users"></i><span class="hide-mini">ผู้ใช้งาน</span></a>
+                <a href="Admin_Users.aspx" class="nav-link-item" title="ผู้ใช้งาน"><i data-lucide="users"></i><span class="hide-mini">ผู้ใช้งาน</span></a>
+                <a href="Admin_Deadline.aspx" class="nav-link-item" title="กำหนดส่งงาน"><i data-lucide="calendar-clock"></i><span class="hide-mini">กำหนดส่งงาน</span></a>
                 <a href="Admin_DocType.aspx" class="nav-link-item" title="ประเภทโครงงาน"><i data-lucide="tags"></i><span class="hide-mini">ประเภทโครงงาน</span></a>
                 <a href="Code.aspx" class="nav-link-item" title="คลังซอร์สโค้ด"><i data-lucide="code-xml"></i><span class="hide-mini">คลังซอร์สโค้ด</span></a>
             </div>

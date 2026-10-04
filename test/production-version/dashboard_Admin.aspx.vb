@@ -4,7 +4,7 @@ Imports System.Text
 Partial Class production_version_dashboard_Admin
     Inherits System.Web.UI.Page
 
-    Protected KpiHtml, LatestHtml, ActivityHtml As String
+    Protected KpiHtml, OverdueHtml, LatestHtml, ActivityHtml As String
     Protected MonthLabels, MonthProjects, MonthFiles, TypeLabels, TypeValues As String
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -41,6 +41,7 @@ Partial Class production_version_dashboard_Admin
         LatestHtml = sb.ToString()
 
         ActivityHtml = Dash.Activity(Dash.ActivitySql("1 = 1", 7))
+        OverdueHtml = Chapters.OverduePanel("1 = 1", "Chapters.aspx?DocID=")
     End Sub
 
 End Class

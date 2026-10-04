@@ -4,7 +4,7 @@ Imports System.Text
 Partial Class production_version_dashboard_Teacher
     Inherits System.Web.UI.Page
 
-    Protected KpiHtml, PendingHtml, ActivityHtml As String
+    Protected KpiHtml, OverdueHtml, PendingHtml, ActivityHtml As String
     Protected MonthLabels, MonthFiles, MonthEdits, StatusLabels, StatusValues As String
 
     ' โครงงานที่อาจารย์คนนี้ดูแล
@@ -54,6 +54,7 @@ Partial Class production_version_dashboard_Teacher
         PendingHtml = sb.ToString()
 
         ActivityHtml = Dash.Activity(Dash.ActivitySql(MyDocs, 7), Shell.P("@Email", email))
+        OverdueHtml = Chapters.OverduePanel(MyDocs.Replace("{DocID}", "m.DocID"), "Chapters.aspx?DocID=", Shell.P("@Email", email))
     End Sub
 
 End Class

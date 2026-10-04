@@ -51,7 +51,7 @@ Partial Class production_version_Doc_Student
             sb.Append("<a href=""Code.aspx?doc=" & r("DocID") & """ class=""tw-flex tw-items-center tw-gap-1""><i data-lucide=""code-xml"" class=""tw-h-3.5 tw-w-3.5""></i>" & r("Codes") & " ฟังก์ชัน</a>")
             sb.Append(If(mine, "<span class=""tw-flex tw-items-center tw-gap-1 tw-text-ok""><i data-lucide=""check"" class=""tw-h-3.5 tw-w-3.5""></i>คุณกดผ่านแล้ว</span>",
                                 "<span class=""tw-flex tw-items-center tw-gap-1 tw-text-warn""><i data-lucide=""clock"" class=""tw-h-3.5 tw-w-3.5""></i>รอคุณพิจารณา</span>"))
-            sb.Append("</div><a href=""" & url & """ class=""btn btn-primary btn-sm tw-shrink-0"">พิจารณา/จัดการ</a></div></div>")
+            sb.Append("</div><div class=""tw-flex tw-shrink-0 tw-gap-2""><a href=""Chapters.aspx?DocID=" & r("DocID") & """ class=""btn btn-secondary btn-sm"">ตรวจเอกสาร</a><a href=""" & url & """ class=""btn btn-primary btn-sm"">พิจารณา/จัดการ</a></div></div></div>")
         Next
         If shown = 0 Then
             sb.Append("<div class=""panel tw-col-span-full tw-p-12 tw-text-center tw-text-muted"">" &
