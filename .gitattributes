@@ -1,0 +1,15 @@
+# เก็บไฟล์ตามจริง ไม่แปลงตัวขึ้นบรรทัด
+* -text
+*.pdf binary
+*.dll binary
+*.exe binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.bacpac binary

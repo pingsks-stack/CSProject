@@ -1,0 +1,147 @@
+﻿<%@ Master Language="VB" CodeFile="MasterPageTeacher.master.vb" Inherits="production_version_MasterPageTeacher" %>
+
+<%@ Register Assembly="DevExpress.Web.Bootstrap.v21.1, Version=21.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.Bootstrap" TagPrefix="dx" %>
+
+<%@ Register Assembly="DevExpress.Web.v21.1, Version=21.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
+
+<!DOCTYPE html>
+
+<html lang="th" class="dark">
+<head runat="server">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="assets/img/Project/up_logo.png" type="image/x-icon">
+    <title>CS Project · ระบบติดตามโครงงาน</title>
+
+    <%-- ใช้ธีมและสถานะเมนูที่ผู้ใช้เลือกไว้ก่อนวาดหน้า กันหน้ากระพริบ --%>
+    <script>
+        try {
+            var t = localStorage.getItem('theme');
+            if (t === 'light') document.documentElement.classList.remove('dark');
+            if (localStorage.getItem('sidebar') === 'mini') document.documentElement.classList.add('sidebar-mini');
+        } catch (e) { }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" href="assets/css/tailwind.css">
+
+    <%-- ให้หน้าลูกเรียก $(...) ได้ก่อนที่ jQuery ใน app.js จะโหลด --%>
+    <script>(function(w,d,u){w.readyQ=[];w.bindReadyQ=[];function p(x,y){if(x=="ready"){w.bindReadyQ.push(y);}else{w.readyQ.push(x);}};var a={ready:p,bind:p};w.$=w.jQuery=function(f){if(f===d||f===u){return a}else{p(f)}}})(window,document)</script>
+    <script src="https://cdn.jsdelivr.net/npm/notiflix@3.2.8/dist/notiflix-aio-3.2.8.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@1.51.0/dist/umd/lucide.min.js"></script>
+    <script src="assets/js/ui.js"></script>
+
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body class="tw-min-h-screen tw-bg-bg tw-text-ink">
+
+<div id="app-backdrop" class="tw-fixed tw-inset-0 tw-z-30 tw-hidden tw-bg-black/50 lg:tw-hidden"></div>
+
+<%-- ===== เมนูด้านซ้าย ===== --%>
+<aside id="app-sidebar" class="tw-fixed tw-inset-y-0 tw-left-0 tw-z-40 tw-flex tw-w-64 tw--translate-x-full tw-flex-col tw-border-r tw-border-line tw-bg-surface tw-transition-all tw-duration-200 lg:tw-translate-x-0">
+    <div class="tw-relative tw-flex tw-h-16 tw-items-center tw-gap-3 tw-border-b tw-border-line tw-px-4">
+        <img src="assets/img/Project/up_logo.png" alt="มหาวิทยาลัยพะเยา" class="tw-h-10 tw-w-10 tw-shrink-0 tw-rounded-lg tw-bg-white tw-object-contain tw-p-0.5">
+        <div class="hide-mini tw-leading-tight">
+            <div class="tw-text-[15px] tw-font-bold tw-text-ink">CS Project</div>
+            <div class="tw-text-[11px] tw-font-semibold tw-text-gold">มหาวิทยาลัยพะเยา</div>
+        </div>
+        <button type="button" id="collapse-btn" class="tw-absolute -tw-right-3 tw-top-[70px] tw-hidden tw-h-6 tw-w-6 tw-items-center tw-justify-center tw-rounded-full tw-border tw-border-line tw-bg-surface tw-text-muted hover:tw-text-ink lg:tw-flex" aria-label="ย่อ/ขยายเมนู">
+            <i data-lucide="chevrons-left" class="tw-h-3.5 tw-w-3.5"></i>
+        </button>
+    </div>
+
+    <nav data-nav class="tw-flex-1 tw-overflow-y-auto tw-px-3 tw-pb-6">
+        <div data-nav-group>
+            <button type="button" class="nav-group-title" data-group-toggle><span class="hide-mini">ภาพรวม</span><i data-lucide="chevron-down" class="hide-mini tw-h-3.5 tw-w-3.5"></i></button>
+            <div class="nav-group-items tw-space-y-0.5">
+                <a href="dashboard_Teacher.aspx" class="nav-link-item" title="แดชบอร์ด"><i data-lucide="layout-dashboard"></i><span class="hide-mini">แดชบอร์ด</span></a>
+                <a href="Doc_All.aspx" class="nav-link-item" title="คลังโครงงาน"><i data-lucide="library"></i><span class="hide-mini">คลังโครงงาน</span></a>
+                <a href="Search_Doc.aspx" class="nav-link-item" title="ค้นหาโครงงาน"><i data-lucide="search"></i><span class="hide-mini">ค้นหาโครงงาน</span></a>
+                <a href="Code.aspx" class="nav-link-item" title="คลังซอร์สโค้ด"><i data-lucide="code-xml"></i><span class="hide-mini">คลังซอร์สโค้ด</span></a>
+            </div>
+        </div>
+        <div data-nav-group>
+            <button type="button" class="nav-group-title" data-group-toggle><span class="hide-mini">งานอาจารย์</span><i data-lucide="chevron-down" class="hide-mini tw-h-3.5 tw-w-3.5"></i></button>
+            <div class="nav-group-items tw-space-y-0.5">
+                <a href="Doc_Student.aspx" class="nav-link-item" title="โครงงานที่รับผิดชอบ"><i data-lucide="folder-open"></i><span class="hide-mini">โครงงานที่รับผิดชอบ</span></a>
+                <a href="Confirm_NS.aspx" class="nav-link-item" title="คำขอรอยืนยัน"><i data-lucide="inbox"></i><span class="hide-mini">คำขอรอยืนยัน</span></a>
+                <a href="Chat.aspx" class="nav-link-item" title="แชท"><i data-lucide="message-square"></i><span class="hide-mini">แชท</span></a>
+            </div>
+        </div>
+        <div data-nav-group>
+            <button type="button" class="nav-group-title" data-group-toggle><span class="hide-mini">บัญชี</span><i data-lucide="chevron-down" class="hide-mini tw-h-3.5 tw-w-3.5"></i></button>
+            <div class="nav-group-items tw-space-y-0.5">
+                <a href="Profile.aspx" class="nav-link-item" title="โปรไฟล์"><i data-lucide="user-cog"></i><span class="hide-mini">โปรไฟล์</span></a>
+                <a href="ChangePassword.aspx" class="nav-link-item" title="เปลี่ยนรหัสผ่าน"><i data-lucide="key-round"></i><span class="hide-mini">เปลี่ยนรหัสผ่าน</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="tw-flex tw-items-center tw-gap-3 tw-border-t tw-border-line tw-p-3">
+        <div class="tw-flex tw-h-9 tw-w-9 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-accent/20 tw-text-xs tw-font-bold tw-text-accent">
+            <asp:Literal ID="litInitials" runat="server" />
+        </div>
+        <div class="hide-mini tw-min-w-0 tw-flex-1 tw-leading-tight">
+            <div class="tw-truncate tw-text-sm tw-font-semibold tw-text-ink">
+                <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text=""></dx:ASPxLabel>
+            </div>
+            <div class="tw-truncate tw-text-xs tw-text-muted">อาจารย์</div>
+        </div>
+        <a href="Login.aspx" class="hide-mini icon-btn" title="ออกจากระบบ"><i data-lucide="log-out"></i></a>
+    </div>
+</aside>
+
+<div id="app-main" class="tw-transition-all tw-duration-200 lg:tw-pl-64">
+    <%-- ===== แถบด้านบน ===== --%>
+    <header class="tw-sticky tw-top-0 tw-z-20 tw-flex tw-h-16 tw-items-center tw-gap-3 tw-border-b tw-border-line tw-bg-bg/85 tw-px-4 tw-backdrop-blur sm:tw-px-6 lg:tw-px-8">
+        <button type="button" data-sidebar-open class="icon-btn lg:tw-hidden" aria-label="เปิดเมนู"><i data-lucide="menu"></i></button>
+
+        <form action="Search_Doc.aspx" method="get" class="tw-m-0 tw-hidden tw-w-full tw-max-w-sm sm:tw-block">
+            <label class="tw-m-0 tw-flex tw-h-9 tw-items-center tw-gap-2 tw-rounded-lg tw-border tw-border-line tw-bg-surface tw-px-3 tw-text-muted">
+                <i data-lucide="search" class="tw-h-4 tw-w-4"></i>
+                <input id="global-search" name="q" type="search" placeholder="ค้นหาโครงงาน ชื่อนิสิต อาจารย์…" autocomplete="off"
+                    class="tw-w-full tw-border-0 tw-bg-transparent tw-text-sm tw-text-ink tw-outline-none placeholder:tw-text-muted">
+                <kbd class="tw-hidden tw-whitespace-nowrap tw-rounded tw-border tw-border-line tw-px-1.5 tw-text-[10px] tw-font-semibold tw-text-muted md:tw-inline">Ctrl K</kbd>
+            </label>
+        </form>
+
+        <div class="tw-ml-auto tw-flex tw-items-center tw-gap-1">
+            <button type="button" id="theme-toggle" class="icon-btn" title="สลับธีมมืด/สว่าง">
+                <i data-lucide="sun" class="theme-icon-dark"></i><i data-lucide="moon" class="theme-icon-light"></i>
+            </button>
+
+            <div class="tw-relative">
+                <button type="button" id="notif-btn" class="icon-btn" title="การแจ้งเตือน">
+                    <i data-lucide="bell"></i>
+                    <asp:Literal ID="litNotifDot" runat="server" />
+                </button>
+                <div id="notif-panel" class="tw-absolute tw-right-0 tw-mt-2 tw-hidden tw-w-80 tw-overflow-hidden tw-rounded-xl tw-border tw-border-line tw-bg-surface tw-shadow-2xl">
+                    <div class="tw-border-b tw-border-line tw-px-4 tw-py-3 tw-text-sm tw-font-semibold tw-text-ink">การแจ้งเตือน</div>
+                    <div class="tw-max-h-96 tw-overflow-y-auto">
+                        <asp:Literal ID="litNotifItems" runat="server" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="tw-ml-2 tw-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-full tw-bg-accent/20 tw-text-xs tw-font-bold tw-text-accent">
+                <asp:Literal ID="litInitials2" runat="server" />
+            </div>
+        </div>
+    </header>
+
+    <main class="app-content tw-p-4 sm:tw-p-6 lg:tw-p-8">
+        <form id="form1" runat="server">
+            <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </form>
+    </main>
+</div>
+
+<script src="assets/js/app.js"></script>
+<script>(function ($, d) { $.each(readyQ, function (i, f) { $(f) }); $.each(bindReadyQ, function (i, f) { $(d).bind("ready", f) }) })(jQuery, document)</script>
+</body>
+</html>

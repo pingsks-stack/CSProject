@@ -1,0 +1,254 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===================== สีของธีม (สลับด้วย class "dark" บน <html>) ===================== */
+:root {
+  /* โทนสว่าง: ม่วง-ทอง มหาวิทยาลัยพะเยา */
+  --c-bg: 247 245 251;
+  --c-surface: 255 255 255;
+  --c-surface-2: 242 238 248;
+  --c-line: 228 222 238;
+  --c-ink: 30 20 48;
+  --c-muted: 110 100 130;
+  --c-accent: 91 44 140;
+  --c-accent-ink: 255 255 255;
+  --c-gold: 191 141 10;
+  --c-ok: 22 163 74;
+  --c-warn: 217 119 6;
+  --c-bad: 220 38 38;
+  --c-info: 37 99 235;
+  color-scheme: light;
+}
+html.dark {
+  /* โทนมืด: ม่วงเข้ม + ทอง */
+  --c-bg: 17 14 24;
+  --c-surface: 26 22 36;
+  --c-surface-2: 35 30 48;
+  --c-line: 50 43 66;
+  --c-ink: 240 236 247;
+  --c-muted: 160 150 180;
+  --c-accent: 180 146 236;
+  --c-accent-ink: 24 12 40;
+  --c-gold: 236 192 72;
+  --c-ok: 74 222 128;
+  --c-warn: 234 179 8;
+  --c-bad: 248 113 113;
+  --c-info: 96 165 250;
+  color-scheme: dark;
+}
+
+/* ===================== ฟอนต์ Noto Sans Thai ทั้งเว็บ ===================== */
+html, body, input, select, textarea, button, table, th, td,
+.btn, .form-control, .card, .dropdown-menu, .modal, .tooltip, .popover,
+[class*="dxbs-"], [class*="dxgv"], [class*="dxe"], [class^="dx"], .dxWeb,
+h1, h2, h3, h4, h5, h6, p, label, span, a, li {
+  font-family: "Noto Sans Thai", system-ui, sans-serif !important;
+}
+.icon, .icon:before, [class^="icon-"], [class*=" icon-"],
+[class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: paperIcons !important;
+}
+
+body {
+  background: rgb(var(--c-bg)) !important;
+  color: rgb(var(--c-ink));
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===================== เนื้อหาเดิม (Bootstrap / template / DevExpress) ให้ใช้สีของธีม ===================== */
+.app-content { color: rgb(var(--c-ink)); }
+.app-content h1, .app-content h2, .app-content h3, .app-content h4, .app-content h5, .app-content h6,
+.app-content .text-dark, .app-content strong, .app-content b, .app-content label { color: rgb(var(--c-ink)); }
+.app-content .text-muted, .app-content small { color: rgb(var(--c-muted)) !important; }
+.app-content a:not(.btn):not(.nav-link-item):not(.btn-accent):not(.icon-btn) { color: rgb(var(--c-accent)); }
+
+/* พื้นผิว: การ์ด กล่อง และ class สีพื้นของ template */
+.app-content .card, .app-content .counter-box, .app-content .white, .app-content .bg-white,
+.app-content .light, .app-content .shadow, .app-content .r-3, .app-content .list-group-item,
+.app-content .jumbotron, .app-content .box {
+  background-color: rgb(var(--c-surface)) !important;
+  color: rgb(var(--c-ink));
+  border-color: rgb(var(--c-line)) !important;
+}
+.app-content .card, .app-content .counter-box {
+  border: 1px solid rgb(var(--c-line)) !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+.app-content .card-header, .app-content .card-footer {
+  background: transparent !important;
+  border-color: rgb(var(--c-line)) !important;
+  color: rgb(var(--c-ink));
+  font-weight: 600;
+}
+/* แถบหัวสีฟ้าของ template (เช่นหน้า MAS_Doc) */
+.app-content header.blue, .app-content .blue.accent-3, .app-content .bg-primary {
+  background: rgb(var(--c-surface)) !important;
+  color: rgb(var(--c-ink)) !important;
+  border: 1px solid rgb(var(--c-line));
+  border-radius: 14px;
+}
+.app-content header.blue * { color: rgb(var(--c-ink)) !important; }
+.app-content hr { border-color: rgb(var(--c-line)); }
+
+/* ปุ่ม */
+.app-content .btn { border-radius: 10px; font-weight: 500; box-shadow: none !important; }
+.app-content .btn-primary, .btn-primary {
+  background: rgb(var(--c-accent)) !important; border-color: rgb(var(--c-accent)) !important; color: rgb(var(--c-accent-ink)) !important;
+}
+.app-content .btn-primary *, .btn-primary * { color: rgb(var(--c-accent-ink)) !important; }
+.app-content .btn-primary:hover { filter: brightness(1.08); }
+.app-content .btn-secondary, .app-content .btn-default, .app-content .btn-light {
+  background: rgb(var(--c-surface-2)) !important; border-color: rgb(var(--c-line)) !important; color: rgb(var(--c-ink)) !important;
+}
+.app-content .btn-warning { background: rgb(var(--c-warn) / .15) !important; border-color: rgb(var(--c-warn) / .4) !important; color: rgb(var(--c-warn)) !important; }
+.app-content .btn-danger { background: rgb(var(--c-bad) / .15) !important; border-color: rgb(var(--c-bad) / .4) !important; color: rgb(var(--c-bad)) !important; }
+.app-content .btn-success { background: rgb(var(--c-ok) / .15) !important; border-color: rgb(var(--c-ok) / .4) !important; color: rgb(var(--c-ok)) !important; }
+.app-content .btn-info { background: rgb(var(--c-info) / .15) !important; border-color: rgb(var(--c-info) / .4) !important; color: rgb(var(--c-info)) !important; }
+.app-content .btn-warning *, .app-content .btn-danger *, .app-content .btn-success *, .app-content .btn-info * { color: inherit !important; }
+
+/* ช่องกรอก */
+.app-content .form-control, .app-content select, .app-content textarea,
+.app-content input[type="text"], .app-content input[type="email"], .app-content input[type="password"],
+.app-content input[type="number"], .app-content input[type="search"], .app-content .input-group-text,
+.app-content .custom-select {
+  background-color: rgb(var(--c-surface-2)) !important;
+  border: 1px solid rgb(var(--c-line)) !important;
+  color: rgb(var(--c-ink)) !important;
+  border-radius: 10px;
+}
+.app-content .form-control:focus, .app-content select:focus, .app-content textarea:focus {
+  border-color: rgb(var(--c-accent)) !important;
+  box-shadow: 0 0 0 3px rgb(var(--c-accent) / .18) !important;
+  outline: none;
+}
+.app-content .form-control::placeholder { color: rgb(var(--c-muted)); }
+.app-content input[type="file"] { color: rgb(var(--c-muted)); }
+
+/* ตาราง (GridView / DevExpress / Bootstrap) */
+.app-content table, .app-content .table, .app-content table.gridview {
+  background: transparent !important;
+  color: rgb(var(--c-ink)) !important;
+  border-color: rgb(var(--c-line)) !important;
+}
+.app-content .table th, .app-content table.gridview th, .app-content .dxbs-gridview .table th,
+.app-content table th {
+  background: rgb(var(--c-surface-2)) !important;
+  color: rgb(var(--c-muted)) !important;
+  font-size: 13px; font-weight: 600;
+  border-color: rgb(var(--c-line)) !important;
+}
+.app-content .table td, .app-content table.gridview td, .app-content table td {
+  border-color: rgb(var(--c-line)) !important;
+  background: transparent !important;
+  color: rgb(var(--c-ink));
+  vertical-align: middle;
+}
+.app-content .table-striped tbody tr:nth-of-type(odd) { background: rgb(var(--c-surface-2) / .5) !important; }
+.app-content .table tbody tr:hover td, .app-content table.gridview tr:hover td { background: rgb(var(--c-accent) / .06) !important; }
+.app-content .dxbs-gridview, .app-content .dxbs-gridview > .card { border-radius: 14px !important; }
+.app-content .pagination .page-link {
+  background: rgb(var(--c-surface)) !important; border-color: rgb(var(--c-line)) !important; color: rgb(var(--c-ink)) !important;
+}
+.app-content .pagination .active .page-link { background: rgb(var(--c-accent)) !important; color: rgb(var(--c-accent-ink)) !important; }
+
+/* แท็บ */
+.app-content .nav-tabs, .app-content .nav-material { border-color: rgb(var(--c-line)) !important; }
+.app-content .nav-link { color: rgb(var(--c-muted)) !important; }
+.app-content .nav-link.active, .app-content .nav-link:hover { color: rgb(var(--c-accent)) !important; background: transparent !important; border-color: rgb(var(--c-accent)) !important; }
+
+/* modal / dropdown / popup ของ DevExpress */
+.modal-content, .dropdown-menu, .dxbs-popup .modal-content, .popover {
+  background: rgb(var(--c-surface)) !important;
+  color: rgb(var(--c-ink)) !important;
+  border: 1px solid rgb(var(--c-line)) !important;
+  border-radius: 14px !important;
+}
+.modal-header, .modal-footer { border-color: rgb(var(--c-line)) !important; }
+.modal-content .close { color: rgb(var(--c-ink)) !important; text-shadow: none; }
+.dropdown-item { color: rgb(var(--c-ink)) !important; }
+.dropdown-item:hover { background: rgb(var(--c-surface-2)) !important; }
+
+/* ตัวเลขบนการ์ด dashboard เดิม */
+.app-content .sc-counter { font-size: 2rem; font-weight: 700; color: rgb(var(--c-ink)); }
+.app-content .counter-box .btn h4 { margin: 0; font-size: .875rem; font-weight: 600; }
+
+/* scrollbar บาง ๆ แบบในธีมตัวอย่าง */
+* { scrollbar-width: thin; scrollbar-color: rgb(var(--c-line)) transparent; }
+
+/* ===================== องค์ประกอบของ layout ใหม่ ===================== */
+@layer components {
+  .nav-group-title {
+    @apply tw-flex tw-w-full tw-cursor-pointer tw-items-center tw-justify-between tw-border-0 tw-bg-transparent tw-px-3 tw-pb-2 tw-pt-5 tw-text-[11px] tw-font-semibold tw-uppercase tw-tracking-[0.12em] tw-text-muted;
+  }
+  .nav-link-item {
+    @apply tw-flex tw-items-center tw-gap-3 tw-rounded-lg tw-px-3 tw-py-2 tw-text-[14px] tw-font-medium tw-text-ink/80 tw-no-underline tw-transition hover:tw-bg-surface-2 hover:tw-text-ink hover:tw-no-underline;
+  }
+  .nav-link-item svg { @apply tw-h-[18px] tw-w-[18px] tw-shrink-0 tw-text-muted; }
+  .nav-link-item.is-active { @apply tw-bg-accent/15 tw-text-accent; }
+  .nav-link-item.is-active svg { @apply tw-text-accent; }
+
+  .panel { @apply tw-rounded-2xl tw-border tw-border-line tw-bg-surface; }
+  .panel-head { @apply tw-flex tw-items-center tw-justify-between tw-gap-3 tw-border-b tw-border-line tw-px-5 tw-py-4; }
+  .panel-title { @apply tw-m-0 tw-text-base tw-font-semibold tw-text-ink; }
+  .panel-sub { @apply tw-m-0 tw-text-xs tw-text-muted; }
+
+  .kpi-icon { @apply tw-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-lg; }
+  .kpi-icon svg { @apply tw-h-[18px] tw-w-[18px]; }
+
+  .icon-btn {
+    @apply tw-relative tw-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-lg tw-border-0 tw-bg-transparent tw-text-muted tw-transition hover:tw-bg-surface-2 hover:tw-text-ink;
+  }
+  .icon-btn svg { @apply tw-h-[18px] tw-w-[18px]; }
+
+  .btn-accent {
+    @apply tw-inline-flex tw-items-center tw-gap-2 tw-rounded-lg tw-border-0 tw-bg-accent tw-px-4 tw-py-2 tw-text-sm tw-font-semibold tw-text-accent-ink tw-no-underline tw-transition hover:tw-brightness-110 hover:tw-text-accent-ink hover:tw-no-underline;
+  }
+  .btn-accent svg { @apply tw-h-4 tw-w-4; }
+
+  .badge-soft { @apply tw-inline-flex tw-items-center tw-rounded-full tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-semibold; }
+
+  .data-table { @apply tw-w-full tw-border-collapse tw-text-sm; }
+  .data-table th { @apply tw-border-b tw-border-line tw-px-5 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-text-muted; background: transparent !important; }
+  .data-table td { @apply tw-border-b tw-border-line tw-px-5 tw-py-3 tw-text-ink; }
+  .data-table tr:last-child td { @apply tw-border-b-0; }
+}
+
+/* sidebar แบบย่อ (เหลือแต่ไอคอน) บนจอใหญ่ */
+@media (min-width: 1024px) {
+  html.sidebar-mini #app-sidebar { width: 76px; }
+  html.sidebar-mini #app-main { padding-left: 76px; }
+  html.sidebar-mini #app-sidebar .hide-mini { display: none !important; }
+  html.sidebar-mini #app-sidebar .nav-link-item { justify-content: center; }
+  html.sidebar-mini #app-sidebar .nav-group-title { justify-content: center; padding-left: 0; padding-right: 0; }
+  html.sidebar-mini #app-sidebar .nav-group-items { display: block !important; }
+  html.sidebar-mini #collapse-btn svg { transform: rotate(180deg); }
+}
+
+/* ปุ่มสลับธีม: แสดงไอคอนตามโหมด */
+html.dark .theme-icon-light { display: none; }
+html:not(.dark) .theme-icon-dark { display: none; }
+
+/* แถบโหลดและตัวหมุน NProgress ของ template เดิม ไม่เข้ากับธีม */
+#nprogress { display: none !important; }
+
+/* ป้าย Ctrl K บนช่องค้นหา (Bootstrap ใส่พื้นดำให้ kbd) */
+header kbd { background: transparent !important; color: rgb(var(--c-muted)) !important; box-shadow: none !important; }
+
+/* แถวสลับสีของตาราง Bootstrap (ใช้ box-shadow / ตัวแปร --bs-table-*) ให้ใช้สีของธีม */
+.app-content .table > :not(caption) > * > *,
+.app-content .table td, .app-content .table th {
+  box-shadow: none !important;
+  --bs-table-bg: transparent; --bs-table-accent-bg: transparent; --bs-table-striped-bg: transparent;
+  color: rgb(var(--c-ink)) !important;
+}
+.app-content .table-striped > tbody > tr:nth-of-type(odd) > *,
+.app-content .table-striped tbody tr:nth-of-type(odd) td {
+  background: rgb(var(--c-surface-2) / .6) !important;
+}
+.app-content tr, .app-content .table tr { background: transparent !important; }
+
+/* ไอคอนรูปภาพสีดำของ template ให้มองเห็นในโหมดมืด */
+html.dark .app-content img[src*="file.png"] { filter: invert(1) brightness(.85); }

@@ -1,0 +1,18 @@
+# สำเนาไฟล์ก่อนแก้ (เก็บไว้ในเครื่องเท่านั้น)
+backup_before_fix_*/
+
+# เครื่องมือ build ขนาดใหญ่ (ดาวน์โหลดใหม่ได้จาก GitHub ของ Tailwind v3.4.19)
+tailwind/tailwindcss.exe
+
+# ไฟล์ของผู้ใช้ (ข้อมูลส่วนตัวของนิสิต) และไฟล์ชั่วคราว
+test/production-version/Docs/
+test/production-version/Uploads/
+test/App_Data/UploadTemp/
+test/App_Data/submissions/
+test/production-version/_shot_*.html
+
+# Visual Studio / IIS Express
+.vs/
+test/.vs/
+*.user
+*.suo

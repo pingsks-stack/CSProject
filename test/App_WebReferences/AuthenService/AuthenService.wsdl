@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="Login">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="platformName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="deviceType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ProductName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ServiceUser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ServicePass" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoginResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoginResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getSessionLock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ProductName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getSessionLockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="getSessionLockResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getLoginErrorMessage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ProductName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getLoginErrorMessageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getLoginErrorMessageResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Logoff">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LogoffResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="LogoffResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getMinForUnlock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getMinForUnlockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="getMinForUnlockResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="changeUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="changeUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="changeUserResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRefenceID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRefenceIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRefenceIDResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangeServicePassword">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ServiceUser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OldServicePass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="newServicePass" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangeServicePasswordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ChangeServicePasswordResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+      <s:element name="boolean" type="s:boolean" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="LoginSoapIn">
+    <wsdl:part name="parameters" element="tns:Login" />
+  </wsdl:message>
+  <wsdl:message name="LoginSoapOut">
+    <wsdl:part name="parameters" element="tns:LoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="getSessionLockSoapIn">
+    <wsdl:part name="parameters" element="tns:getSessionLock" />
+  </wsdl:message>
+  <wsdl:message name="getSessionLockSoapOut">
+    <wsdl:part name="parameters" element="tns:getSessionLockResponse" />
+  </wsdl:message>
+  <wsdl:message name="getLoginErrorMessageSoapIn">
+    <wsdl:part name="parameters" element="tns:getLoginErrorMessage" />
+  </wsdl:message>
+  <wsdl:message name="getLoginErrorMessageSoapOut">
+    <wsdl:part name="parameters" element="tns:getLoginErrorMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="LogoffSoapIn">
+    <wsdl:part name="parameters" element="tns:Logoff" />
+  </wsdl:message>
+  <wsdl:message name="LogoffSoapOut">
+    <wsdl:part name="parameters" element="tns:LogoffResponse" />
+  </wsdl:message>
+  <wsdl:message name="getMinForUnlockSoapIn">
+    <wsdl:part name="parameters" element="tns:getMinForUnlock" />
+  </wsdl:message>
+  <wsdl:message name="getMinForUnlockSoapOut">
+    <wsdl:part name="parameters" element="tns:getMinForUnlockResponse" />
+  </wsdl:message>
+  <wsdl:message name="changeUserSoapIn">
+    <wsdl:part name="parameters" element="tns:changeUser" />
+  </wsdl:message>
+  <wsdl:message name="changeUserSoapOut">
+    <wsdl:part name="parameters" element="tns:changeUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRefenceIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRefenceID" />
+  </wsdl:message>
+  <wsdl:message name="GetRefenceIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRefenceIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="ChangeServicePasswordSoapIn">
+    <wsdl:part name="parameters" element="tns:ChangeServicePassword" />
+  </wsdl:message>
+  <wsdl:message name="ChangeServicePasswordSoapOut">
+    <wsdl:part name="parameters" element="tns:ChangeServicePasswordResponse" />
+  </wsdl:message>
+  <wsdl:message name="LoginHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="platformName" type="s:string" />
+    <wsdl:part name="deviceType" type="s:string" />
+    <wsdl:part name="ProductName" type="s:string" />
+    <wsdl:part name="ServiceUser" type="s:string" />
+    <wsdl:part name="ServicePass" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LoginHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="getSessionLockHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="ProductName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getSessionLockHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="getLoginErrorMessageHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="ProductName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getLoginErrorMessageHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="LogoffHttpGetIn">
+    <wsdl:part name="sessionID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LogoffHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="getMinForUnlockHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getMinForUnlockHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="changeUserHttpGetIn">
+    <wsdl:part name="sessionID" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="changeUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetRefenceIDHttpGetIn">
+    <wsdl:part name="sessionID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRefenceIDHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="ChangeServicePasswordHttpGetIn">
+    <wsdl:part name="ServiceUser" type="s:string" />
+    <wsdl:part name="OldServicePass" type="s:string" />
+    <wsdl:part name="newServicePass" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ChangeServicePasswordHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="LoginHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="platformName" type="s:string" />
+    <wsdl:part name="deviceType" type="s:string" />
+    <wsdl:part name="ProductName" type="s:string" />
+    <wsdl:part name="ServiceUser" type="s:string" />
+    <wsdl:part name="ServicePass" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LoginHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="getSessionLockHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="ProductName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getSessionLockHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="getLoginErrorMessageHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="ProductName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getLoginErrorMessageHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="LogoffHttpPostIn">
+    <wsdl:part name="sessionID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LogoffHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="getMinForUnlockHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getMinForUnlockHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="changeUserHttpPostIn">
+    <wsdl:part name="sessionID" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="changeUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetRefenceIDHttpPostIn">
+    <wsdl:part name="sessionID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRefenceIDHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="ChangeServicePasswordHttpPostIn">
+    <wsdl:part name="ServiceUser" type="s:string" />
+    <wsdl:part name="OldServicePass" type="s:string" />
+    <wsdl:part name="newServicePass" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ChangeServicePasswordHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:portType name="AuthenServiceSoap">
+    <wsdl:operation name="Login">
+      <wsdl:input message="tns:LoginSoapIn" />
+      <wsdl:output message="tns:LoginSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getSessionLock">
+      <wsdl:input message="tns:getSessionLockSoapIn" />
+      <wsdl:output message="tns:getSessionLockSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getLoginErrorMessage">
+      <wsdl:input message="tns:getLoginErrorMessageSoapIn" />
+      <wsdl:output message="tns:getLoginErrorMessageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Logoff">
+      <wsdl:input message="tns:LogoffSoapIn" />
+      <wsdl:output message="tns:LogoffSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getMinForUnlock">
+      <wsdl:input message="tns:getMinForUnlockSoapIn" />
+      <wsdl:output message="tns:getMinForUnlockSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="changeUser">
+      <wsdl:input message="tns:changeUserSoapIn" />
+      <wsdl:output message="tns:changeUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRefenceID">
+      <wsdl:input message="tns:GetRefenceIDSoapIn" />
+      <wsdl:output message="tns:GetRefenceIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangeServicePassword">
+      <wsdl:input message="tns:ChangeServicePasswordSoapIn" />
+      <wsdl:output message="tns:ChangeServicePasswordSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="AuthenServiceHttpGet">
+    <wsdl:operation name="Login">
+      <wsdl:input message="tns:LoginHttpGetIn" />
+      <wsdl:output message="tns:LoginHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getSessionLock">
+      <wsdl:input message="tns:getSessionLockHttpGetIn" />
+      <wsdl:output message="tns:getSessionLockHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getLoginErrorMessage">
+      <wsdl:input message="tns:getLoginErrorMessageHttpGetIn" />
+      <wsdl:output message="tns:getLoginErrorMessageHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Logoff">
+      <wsdl:input message="tns:LogoffHttpGetIn" />
+      <wsdl:output message="tns:LogoffHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getMinForUnlock">
+      <wsdl:input message="tns:getMinForUnlockHttpGetIn" />
+      <wsdl:output message="tns:getMinForUnlockHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="changeUser">
+      <wsdl:input message="tns:changeUserHttpGetIn" />
+      <wsdl:output message="tns:changeUserHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRefenceID">
+      <wsdl:input message="tns:GetRefenceIDHttpGetIn" />
+      <wsdl:output message="tns:GetRefenceIDHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangeServicePassword">
+      <wsdl:input message="tns:ChangeServicePasswordHttpGetIn" />
+      <wsdl:output message="tns:ChangeServicePasswordHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="AuthenServiceHttpPost">
+    <wsdl:operation name="Login">
+      <wsdl:input message="tns:LoginHttpPostIn" />
+      <wsdl:output message="tns:LoginHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getSessionLock">
+      <wsdl:input message="tns:getSessionLockHttpPostIn" />
+      <wsdl:output message="tns:getSessionLockHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getLoginErrorMessage">
+      <wsdl:input message="tns:getLoginErrorMessageHttpPostIn" />
+      <wsdl:output message="tns:getLoginErrorMessageHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Logoff">
+      <wsdl:input message="tns:LogoffHttpPostIn" />
+      <wsdl:output message="tns:LogoffHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getMinForUnlock">
+      <wsdl:input message="tns:getMinForUnlockHttpPostIn" />
+      <wsdl:output message="tns:getMinForUnlockHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="changeUser">
+      <wsdl:input message="tns:changeUserHttpPostIn" />
+      <wsdl:output message="tns:changeUserHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRefenceID">
+      <wsdl:input message="tns:GetRefenceIDHttpPostIn" />
+      <wsdl:output message="tns:GetRefenceIDHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangeServicePassword">
+      <wsdl:input message="tns:ChangeServicePasswordHttpPostIn" />
+      <wsdl:output message="tns:ChangeServicePasswordHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AuthenServiceSoap" type="tns:AuthenServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Login">
+      <soap:operation soapAction="http://tempuri.org/Login" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSessionLock">
+      <soap:operation soapAction="http://tempuri.org/getSessionLock" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLoginErrorMessage">
+      <soap:operation soapAction="http://tempuri.org/getLoginErrorMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Logoff">
+      <soap:operation soapAction="http://tempuri.org/Logoff" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMinForUnlock">
+      <soap:operation soapAction="http://tempuri.org/getMinForUnlock" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeUser">
+      <soap:operation soapAction="http://tempuri.org/changeUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRefenceID">
+      <soap:operation soapAction="http://tempuri.org/GetRefenceID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeServicePassword">
+      <soap:operation soapAction="http://tempuri.org/ChangeServicePassword" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AuthenServiceSoap12" type="tns:AuthenServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Login">
+      <soap12:operation soapAction="http://tempuri.org/Login" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSessionLock">
+      <soap12:operation soapAction="http://tempuri.org/getSessionLock" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLoginErrorMessage">
+      <soap12:operation soapAction="http://tempuri.org/getLoginErrorMessage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Logoff">
+      <soap12:operation soapAction="http://tempuri.org/Logoff" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMinForUnlock">
+      <soap12:operation soapAction="http://tempuri.org/getMinForUnlock" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeUser">
+      <soap12:operation soapAction="http://tempuri.org/changeUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRefenceID">
+      <soap12:operation soapAction="http://tempuri.org/GetRefenceID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeServicePassword">
+      <soap12:operation soapAction="http://tempuri.org/ChangeServicePassword" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AuthenServiceHttpGet" type="tns:AuthenServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="Login">
+      <http:operation location="/Login" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSessionLock">
+      <http:operation location="/getSessionLock" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLoginErrorMessage">
+      <http:operation location="/getLoginErrorMessage" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Logoff">
+      <http:operation location="/Logoff" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMinForUnlock">
+      <http:operation location="/getMinForUnlock" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeUser">
+      <http:operation location="/changeUser" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRefenceID">
+      <http:operation location="/GetRefenceID" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeServicePassword">
+      <http:operation location="/ChangeServicePassword" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AuthenServiceHttpPost" type="tns:AuthenServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="Login">
+      <http:operation location="/Login" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSessionLock">
+      <http:operation location="/getSessionLock" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLoginErrorMessage">
+      <http:operation location="/getLoginErrorMessage" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Logoff">
+      <http:operation location="/Logoff" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMinForUnlock">
+      <http:operation location="/getMinForUnlock" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeUser">
+      <http:operation location="/changeUser" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRefenceID">
+      <http:operation location="/GetRefenceID" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeServicePassword">
+      <http:operation location="/ChangeServicePassword" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AuthenService">
+    <wsdl:port name="AuthenServiceSoap" binding="tns:AuthenServiceSoap">
+      <soap:address location="https://ws.up.ac.th/mobile/AuthenService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AuthenServiceSoap12" binding="tns:AuthenServiceSoap12">
+      <soap12:address location="https://ws.up.ac.th/mobile/AuthenService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AuthenServiceHttpGet" binding="tns:AuthenServiceHttpGet">
+      <http:address location="https://ws.up.ac.th/mobile/AuthenService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AuthenServiceHttpPost" binding="tns:AuthenServiceHttpPost">
+      <http:address location="https://ws.up.ac.th/mobile/AuthenService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
