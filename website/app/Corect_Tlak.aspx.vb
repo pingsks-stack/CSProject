@@ -1,7 +1,6 @@
 ﻿Imports System.Data
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.IO
-Imports Zulu.Data
 Imports DevExpress.Web
 Imports DevExpress.Web.Bootstrap
 Imports System.Diagnostics

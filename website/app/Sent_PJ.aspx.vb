@@ -1,5 +1,5 @@
 ﻿
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.IO
 Imports DevExpress.Web
 Imports iTextSharp.text
@@ -37,7 +37,7 @@ Partial Class production_version_EditUploadfile
 
 
     Protected Sub btnGeneratePDF_Click(sender As Object, e As EventArgs)
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim docID As String = Request.QueryString("DocID")
         Dim currentDate As DateTime = DateTime.Now
         Dim selectedMonth As Integer = currentDate.Month

@@ -16,11 +16,11 @@ Partial Class production_version_dashboard
         FirstName = If(name.Contains(" "), name.Split(" "c)(0), name)
 
         Dim mine = Dash.Count("SELECT COUNT(DISTINCT DocID) FROM Permission_TB WHERE Email = @Email", Shell.P("@Email", email))
-        Dim minePassed = Dash.Count("SELECT COUNT(*) FROM MAS_DOC WHERE Submit_TC = N'ผ่าน3/3' AND " & MyDocs.Replace("{DocID}", "DocID"), Shell.P("@Email", email))
+        Dim minePassed = Dash.Count("SELECT COUNT(*) FROM MAS_DOC WHERE Submit_TC = 'ผ่าน3/3' AND " & MyDocs.Replace("{DocID}", "DocID"), Shell.P("@Email", email))
         Dim files = Dash.Count("SELECT COUNT(*) FROM Doc_File WHERE " & MyDocs.Replace("{DocID}", "DocID"), Shell.P("@Email", email))
-        Dim teachers = Dash.Count("SELECT COUNT(DISTINCT Email) FROM Permission_TB WHERE Urole = N'2' AND DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Email)", Shell.P("@Email", email))
-        Dim invites = Dash.Count("SELECT COUNT(*) FROM SubAdd_AJ_TB WHERE Status = N'รอการยืนยัน' AND " & MyDocs.Replace("{DocID}", "DocID"), Shell.P("@Email", email))
-        Dim library = Dash.Count("SELECT COUNT(*) FROM MAS_DOC WHERE Submit_TC = N'ผ่าน3/3'")
+        Dim teachers = Dash.Count("SELECT COUNT(DISTINCT Email) FROM Permission_TB WHERE Urole = '2' AND DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Email)", Shell.P("@Email", email))
+        Dim invites = Dash.Count("SELECT COUNT(*) FROM SubAdd_AJ_TB WHERE Status = 'รอการยืนยัน' AND " & MyDocs.Replace("{DocID}", "DocID"), Shell.P("@Email", email))
+        Dim library = Dash.Count("SELECT COUNT(*) FROM MAS_DOC WHERE Submit_TC = 'ผ่าน3/3'")
 
         KpiHtml =
             Dash.Kpi("folder-open", "accent", "โครงงานของฉัน", mine, "ผ่านครบ 3/3 แล้ว " & minePassed & " โครงงาน") &
@@ -29,16 +29,16 @@ Partial Class production_version_dashboard
             Dash.Kpi("library", "warn", "คลังโครงงาน", library, "โครงงานที่ผ่านครบ 3/3 ในระบบ")
 
         Dim m = Dash.Monthly({
-            "SELECT Date_Delete AS D FROM Doc_File_Log WHERE " & MyDocs.Replace("{DocID}", "DocID") & " AND Action IN (N'Insert', N'เพิ่ม', N'เพิ่มไฟล์', N'เพิ่มไฟล์ใหม่')",
+            "SELECT Date_Delete AS D FROM Doc_File_Log WHERE " & MyDocs.Replace("{DocID}", "DocID") & " AND Action IN ('Insert', 'เพิ่ม', 'เพิ่มไฟล์', 'เพิ่มไฟล์ใหม่')",
             "SELECT Doc_dt_Save AS D FROM MAS_DOC_LOG WHERE " & MyDocs.Replace("{DocID}", "DocID")}, Shell.P("@Email", email))
         MonthLabels = m.Labels : MonthFiles = m.Series(0) : MonthEdits = m.Series(1)
 
-        Dim t = Dash.Pairs("SELECT ISNULL(NULLIF(Doc_Type, N''), N'ยังไม่ระบุ') AS Name, COUNT(*) AS N FROM MAS_DOC GROUP BY ISNULL(NULLIF(Doc_Type, N''), N'ยังไม่ระบุ') ORDER BY N DESC")
+        Dim t = Dash.Pairs("SELECT COALESCE(NULLIF(Doc_Type, ''), 'ยังไม่ระบุ') AS Name, COUNT(*) AS N FROM MAS_DOC GROUP BY COALESCE(NULLIF(Doc_Type, ''), 'ยังไม่ระบุ') ORDER BY N DESC")
         TypeLabels = t(0) : TypeValues = t(1)
 
         Dim rows = Shell.Query(
             "SELECT m.DocID, m.Doc_Name, m.Doc_Type, m.Submit_TC, " &
-            "(SELECT COUNT(*) FROM Permission_TB t WHERE t.DocID = m.DocID AND t.Urole = N'2') AS Teachers " &
+            "(SELECT COUNT(*) FROM Permission_TB t WHERE t.DocID = m.DocID AND t.Urole = '2') AS Teachers " &
             "FROM MAS_DOC m WHERE " & MyDocs.Replace("{DocID}", "m.DocID") & " ORDER BY m.Doc_dt_Save DESC", Shell.P("@Email", email))
         Dim sb As New StringBuilder()
         For Each r As DataRow In rows.Rows

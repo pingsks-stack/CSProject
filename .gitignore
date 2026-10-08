@@ -15,3 +15,9 @@ website/app/_shot_*.html
 website/.vs/
 *.user
 *.suo
+
+# connection string จริง (มีรหัสผ่าน)
+website/connectionStrings.config
+
+# log error ของฐานข้อมูล
+website/App_Data/sql-errors.log

@@ -1,7 +1,6 @@
 ﻿Imports System.Data
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.IO
-Imports Zulu.Data
 Imports DevExpress.Web
 Imports DevExpress.Web.Bootstrap
 Imports System.Diagnostics
@@ -33,7 +32,7 @@ Partial Class production_version_Doc_Student
 
 
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSave.Click
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim docID As String = Request.QueryString("DocID")
         Dim permissionID As String = Request.QueryString("Permission_ID")
 
@@ -46,7 +45,7 @@ Partial Class production_version_Doc_Student
             Dim commentExists As Boolean = CheckCommentExists(docID, Session("Email"), commentText.Text)
 
             If Not commentExists Then
-                Dim saveinsert = db.GetValue("insert into Comment_TB (Permission_ID,DocID,Email,Name,Comment_Text,Date_Save,Post_Name_RS) VALUES (@Permission_ID,@DocID,@Email,@Name,@Comment_Text,getdate(),'นักศึกษา')",
+                Dim saveinsert = db.GetValue("insert into Comment_TB (Permission_ID,DocID,Email,Name,Comment_Text,Date_Save,Post_Name_RS) VALUES (@Permission_ID,@DocID,@Email,@Name,@Comment_Text,NOW(),'นักศึกษา')",
                       db.NewParam("Permission_ID", permissionID),
                       db.NewParam("DocID", docID),
                       db.NewParam("Email", Session("Email")),
@@ -64,15 +63,15 @@ Partial Class production_version_Doc_Student
     Private Function CheckCommentExists(ByVal docID As String, ByVal email As String, ByVal commentText As String) As Boolean
         ' เชื่อมต่อกับฐานข้อมูล
         Dim connectionString As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
-        Using db As New SqlConnection(connectionString)
+        Using db As New NpgsqlConnection(connectionString)
             db.Open()
 
             ' ค้นหาคอมเมนต์ที่มีค่าเดียวกันในฐานข้อมูล
             Dim query As String = "SELECT COUNT(*) FROM Comment_TB WHERE DocID = @DocID AND Email = @Email AND Comment_Text = @CommentText"
-            Using cmd As New SqlCommand(query, db)
-                cmd.Parameters.AddWithValue("@DocID", docID)
-                cmd.Parameters.AddWithValue("@Email", email)
-                cmd.Parameters.AddWithValue("@CommentText", commentText)
+            Using cmd As New NpgsqlCommand(query, db)
+                cmd.Parameters.Add(PgDb.Param("@DocID", docID))
+                cmd.Parameters.Add(PgDb.Param("@Email", email))
+                cmd.Parameters.Add(PgDb.Param("@CommentText", commentText))
 
                 ' นับจำนวนคอมเมนต์ที่ตรงเงื่อนไข
                 Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())

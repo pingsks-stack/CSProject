@@ -1,10 +1,10 @@
 ﻿Imports System.Data
-Imports System.Data.SqlClient
+Imports Npgsql
 Partial Class production_version_Login
     Inherits System.Web.UI.Page
 
-    Dim con As New SqlConnection
-    Dim cmd As New SqlCommand
+    Dim con As New NpgsqlConnection
+    Dim cmd As New NpgsqlCommand
 
 
 
@@ -19,7 +19,7 @@ Partial Class production_version_Login
     End Sub
 
     Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim login = db.GetDataTable("SELECT * FROM Signin_Signup WHERE Username = @Username",
                                     db.NewParam("Username", inputEmailAddress.Text))
 

@@ -101,11 +101,11 @@ Partial Class production_version_CodeEdit
         Dim code As String = txtCode.Text
         Dim action As String
         If codeID > 0 Then
-            Shell.Exec("UPDATE Doc_List_TB SET Doc_List_Type = @Lang, Doc_Functions_Code = @Func, Doc_List_Code = @Code, Doc_Date_Save = GETDATE() WHERE Doc_List_ID = @ID AND DocID = @DocID",
+            Shell.Exec("UPDATE Doc_List_TB SET Doc_List_Type = @Lang, Doc_Functions_Code = @Func, Doc_List_Code = @Code, Doc_Date_Save = NOW() WHERE Doc_List_ID = @ID AND DocID = @DocID",
                        Shell.P("@Lang", lang), Shell.P("@Func", func), Shell.P("@Code", code), Shell.P("@ID", codeID), Shell.P("@DocID", DocID))
             action = "Update"
         Else
-            Dim newId = Shell.Query("INSERT INTO Doc_List_TB (DocID, Doc_List_Type, Doc_Functions_Code, Doc_List_Code, Doc_Date_Save) VALUES (@DocID, @Lang, @Func, @Code, GETDATE()); SELECT CAST(SCOPE_IDENTITY() AS int)",
+            Dim newId = Shell.Query("INSERT INTO Doc_List_TB (DocID, Doc_List_Type, Doc_Functions_Code, Doc_List_Code, Doc_Date_Save) VALUES (@DocID, @Lang, @Func, @Code, NOW()) RETURNING Doc_List_ID",
                                     Shell.P("@DocID", DocID), Shell.P("@Lang", lang), Shell.P("@Func", func), Shell.P("@Code", code))
             codeID = CInt(newId.Rows(0)(0))
             action = "Insert"
@@ -131,7 +131,7 @@ Partial Class production_version_CodeEdit
     End Sub
 
     Private Sub Log(action As String, lang As String, func As String)
-        Shell.Exec("INSERT INTO Doc_List_Log (DocID, Doc_List_ID, Doc_List_Type, Doc_Functions_Code, Doc_Date_Save, Post_Name, Action) VALUES (@DocID, @ID, @Lang, @Func, GETDATE(), @Name, @Action)",
+        Shell.Exec("INSERT INTO Doc_List_Log (DocID, Doc_List_ID, Doc_List_Type, Doc_Functions_Code, Doc_Date_Save, Post_Name, Action) VALUES (@DocID, @ID, @Lang, @Func, NOW(), @Name, @Action)",
                    Shell.P("@DocID", DocID), Shell.P("@ID", codeID), Shell.P("@Lang", lang), Shell.P("@Func", func),
                    Shell.P("@Name", Convert.ToString(Session("Name"))), Shell.P("@Action", action))
     End Sub

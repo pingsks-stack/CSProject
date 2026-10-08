@@ -1,5 +1,5 @@
 ﻿Imports System.Data
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.Text
 
 ' คลังโครงงาน (โครงงานที่ผ่าน 3/3) ใช้ได้ทุกบทบาท
@@ -26,12 +26,12 @@ Partial Class production_version_Doc_All
 
         ' ตัวเลือกกรอง ดึงจากข้อมูลจริง
         Dim sb As New StringBuilder(Opt("", "ทุกประเภท", docType))
-        For Each r As DataRow In Shell.Query("SELECT Doc_Type FROM DocTypeTB ORDER BY CASE WHEN Doc_Type = N'Other' THEN 1 ELSE 0 END, TypeID").Rows
+        For Each r As DataRow In Shell.Query("SELECT Doc_Type FROM DocTypeTB ORDER BY CASE WHEN Doc_Type = 'Other' THEN 1 ELSE 0 END, TypeID").Rows
             sb.Append(Opt(Convert.ToString(r(0)), Convert.ToString(r(0)), docType))
         Next
         TypeOptions = sb.ToString()
         sb = New StringBuilder(Opt("", "ทุกปีการศึกษา", year))
-        For Each r As DataRow In Shell.Query("SELECT DISTINCT Class_Year_No FROM MAS_DOC WHERE Submit_TC = N'ผ่าน3/3' AND ISNULL(Class_Year_No, N'') <> N'' ORDER BY Class_Year_No DESC").Rows
+        For Each r As DataRow In Shell.Query("SELECT DISTINCT Class_Year_No FROM MAS_DOC WHERE Submit_TC = 'ผ่าน3/3' AND COALESCE(Class_Year_No, '') <> '' ORDER BY Class_Year_No DESC").Rows
             sb.Append(Opt(Convert.ToString(r(0)), "ปีการศึกษา " & Convert.ToString(r(0)), year))
         Next
         YearOptions = sb.ToString()
@@ -41,11 +41,11 @@ Partial Class production_version_Doc_All
         Next
         ClassOptions = sb.ToString()
 
-        Dim conds As New List(Of String) From {"m.Submit_TC = N'ผ่าน3/3'"}
-        Dim ps As New List(Of SqlParameter)
+        Dim conds As New List(Of String) From {"m.Submit_TC = 'ผ่าน3/3'"}
+        Dim ps As New List(Of NpgsqlParameter)
         If Q <> "" Then
             conds.Add("(m.Doc_Name LIKE @Q OR m.Doc_NameEN LIKE @Q OR m.Student_Name LIKE @Q OR m.Student_Name2 LIKE @Q OR m.Name_teacherPJ LIKE @Q)")
-            ps.Add(Shell.P("@Q", "%" & Q.Replace("[", "[[]").Replace("%", "[%]").Replace("_", "[_]") & "%"))
+            ps.Add(Shell.P("@Q", "%" & Q.Replace("\", "\\").Replace("%", "\%").Replace("_", "\_") & "%"))
         End If
         If docType <> "" Then conds.Add("m.Doc_Type = @Type") : ps.Add(Shell.P("@Type", docType))
         If year <> "" Then conds.Add("m.Class_Year_No = @Year") : ps.Add(Shell.P("@Year", year))

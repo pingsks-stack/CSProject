@@ -1,5 +1,5 @@
 ﻿
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.IO
 
 Partial Class production_version_Insert
@@ -50,19 +50,19 @@ Partial Class production_version_Insert
     '        classNo = "0"
     '    End If
 
-    '    Dim saveinsert As String = "insert into MAS_DOC (Student_Name, Student_ID, Email, Mobile, Doc_Name, Doc_NameEN, Class_No, Class_Year_No, Doc_dt_Save) VALUES (@Student_Name, @Student_ID, @Email, @Mobile, @Doc_Name, @Doc_NameEN, @Class_No, @Class_Year_No, getdate()) SELECT SCOPE_IDENTITY()"
-    '    Using connection As New SqlConnection(connectionString)
+    '    Dim saveinsert As String = "insert into MAS_DOC (Student_Name, Student_ID, Email, Mobile, Doc_Name, Doc_NameEN, Class_No, Class_Year_No, Doc_dt_Save) VALUES (@Student_Name, @Student_ID, @Email, @Mobile, @Doc_Name, @Doc_NameEN, @Class_No, @Class_Year_No, NOW()) RETURNING DocID"
+    '    Using connection As New NpgsqlConnection(connectionString)
     '        connection.Open()
     '        ' Insert ข้อมูลลงในฐานข้อมูล
-    '        Dim saveinsertCommand As New SqlCommand(saveinsert, connection)
-    '        saveinsertCommand.Parameters.AddWithValue("@Student_Name", Session("Name"))
-    '        saveinsertCommand.Parameters.AddWithValue("@Student_ID", Session("Student_ID"))
-    '        saveinsertCommand.Parameters.AddWithValue("@Email", Session("Email"))
-    '        saveinsertCommand.Parameters.AddWithValue("@Mobile", Session("Mobile"))
-    '        saveinsertCommand.Parameters.AddWithValue("@Doc_Name", NamprojectTH.Text)
-    '        saveinsertCommand.Parameters.AddWithValue("@Doc_NameEN", NameprojectEN.Text)
-    '        saveinsertCommand.Parameters.AddWithValue("@Class_No", classNo) ' กำหนดค่า Class_No
-    '        saveinsertCommand.Parameters.AddWithValue("@Class_Year_No", classYearNo)
+    '        Dim saveinsertCommand As New NpgsqlCommand(saveinsert, connection)
+    '        saveinsertCommand.Parameters.Add(PgDb.Param("@Student_Name", Session("Name")))
+    '        saveinsertCommand.Parameters.Add(PgDb.Param("@Student_ID", Session("Student_ID")))
+    '        saveinsertCommand.Parameters.Add(PgDb.Param("@Email", Session("Email")))
+    '        saveinsertCommand.Parameters.Add(PgDb.Param("@Mobile", Session("Mobile")))
+    '        saveinsertCommand.Parameters.Add(PgDb.Param("@Doc_Name", NamprojectTH.Text))
+    '        saveinsertCommand.Parameters.Add(PgDb.Param("@Doc_NameEN", NameprojectEN.Text))
+    '        saveinsertCommand.Parameters.Add(PgDb.Param("@Class_No", classNo)) ' กำหนดค่า Class_No
+    '        saveinsertCommand.Parameters.Add(PgDb.Param("@Class_Year_No", classYearNo))
     '        saveinsertCommand.ExecuteNonQuery()
 
     '        ' ... ส่วนอื่น ๆ ของโค้ด ...
@@ -78,7 +78,7 @@ Partial Class production_version_Insert
     Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         If Not Page.IsValid Then Return
 
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
 
         'ตรวจสอบค่า Doc_Name ซ้ำ
         Dim checkDocNameQuery As String = "SELECT COUNT(*) FROM MAS_DOC WHERE Doc_Name = @Doc_Name"
@@ -120,7 +120,7 @@ Partial Class production_version_Insert
             'แสดงการแจ้งเตือน Swal.fire เมื่อ Doc_Name หรือ Doc_NameEN ซ้ำ
             ClientScript.RegisterStartupScript(Me.GetType(), "alert", "swal.fire({ title: 'แจ้งเตือน', text: 'ชื่อโปรเจค(ภาษาไทย) หรือ ชื่อโปรเจค(ภาษาอังกฤษ) ซ้ำ', icon: 'warning', confirmButtonText: 'ตกลง' })", True)
         Else
-            Dim saveinsert = db.GetValue("insert into MAS_DOC (Student_Name,Student_ID,Email,Mobile,Doc_Name,Doc_NameEN,Class_No,Class_Year_No,Doc_dt_Save,Submit_TC,Doc_Type) VALUES (@Student_Name,@Student_ID,@Email,@Mobile,@Doc_Name,@Doc_NameEN,@Class_No,@Class_Year_No,getdate(),'ยังไม่มีการกดผ่าน/ไม่ผ่าน',@Doc_Type)SELECT SCOPE_IDENTITY()",
+            Dim saveinsert = db.GetValue("insert into MAS_DOC (Student_Name,Student_ID,Email,Mobile,Doc_Name,Doc_NameEN,Class_No,Class_Year_No,Doc_dt_Save,Submit_TC,Doc_Type) VALUES (@Student_Name,@Student_ID,@Email,@Mobile,@Doc_Name,@Doc_NameEN,@Class_No,@Class_Year_No,NOW(),'ยังไม่มีการกดผ่าน/ไม่ผ่าน',@Doc_Type) RETURNING DocID",
                    db.NewParam("Doc_Type", ddlDocType.SelectedValue),
                    db.NewParam("Student_Name", Session("Name")),
                    db.NewParam("Student_ID", Session("Student_ID")),
@@ -131,7 +131,7 @@ Partial Class production_version_Insert
                    db.NewParam("Class_No", classNo),
                    db.NewParam("Class_Year_No", classYearNo))
 
-            Dim savePermission = db.GetValue("insert into Permission_TB (DocID,UserID,Name,Email,Mobile,Urole,Student_ID) VALUES (@DocID,@UserID,@Name,@Email,@Mobile,'1',@Student_ID)SELECT SCOPE_IDENTITY()",
+            Dim savePermission = db.GetValue("insert into Permission_TB (DocID,UserID,Name,Email,Mobile,Urole,Student_ID) VALUES (@DocID,@UserID,@Name,@Email,@Mobile,'1',@Student_ID) RETURNING Permission_ID",
                     db.NewParam("DocID", saveinsert),
                     db.NewParam("UserID", Session("UserID")),
                     db.NewParam("Name", Session("Name")),
@@ -140,7 +140,7 @@ Partial Class production_version_Insert
                     db.NewParam("Student_ID", Session("Student_ID")))
 
 
-            Dim saveMasLog = db.GetValue("insert into MAS_DOC_LOG (DocID,Doc_Name,Doc_NameEN,Doc_dt_Save,Action,Post_Name) VALUES (@DocID,@Doc_Name,@Doc_NameEN,getdate(),'สร้าง',@Post_Name)SELECT SCOPE_IDENTITY()",
+            Dim saveMasLog = db.GetValue("insert into MAS_DOC_LOG (DocID,Doc_Name,Doc_NameEN,Doc_dt_Save,Action,Post_Name) VALUES (@DocID,@Doc_Name,@Doc_NameEN,NOW(),'สร้าง',@Post_Name) RETURNING Doc_Log_ID",
                 db.NewParam("DocID", saveinsert),
                 db.NewParam("Doc_Name", NamprojectTH.Text),
                 db.NewParam("Doc_NameEN", NameprojectEN.Text),
@@ -190,12 +190,12 @@ Partial Class production_version_Insert
             '                        iUploadedCnt = iUploadedCnt + 1
 
             '                        ' เพิ่มรายการไฟล์ลงในฐานข้อมูล
-            '                        Dim saveFile = db.GetValue("INSERT INTO Doc_File (DocID, Doc_File) VALUES (@DocID, @Doc_File); SELECT SCOPE_IDENTITY()",
+            '                        Dim saveFile = db.GetValue("INSERT INTO Doc_File (DocID, Doc_File) VALUES (@DocID, @Doc_File) RETURNING Doc_File_ID",
             '                            db.NewParam("DocID", saveinsert),
             '                            db.NewParam("Doc_File", hpf.FileName))
 
             '                        ' Insert the record into Doc_File_Log
-            '                        Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File,Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File,@Post_Name, GETDATE(), 'เพิ่ม')",
+            '                        Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File,Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File,@Post_Name, NOW(), 'เพิ่ม')",
             '                           db.NewParam("DocID", saveinsert),
             '                           db.NewParam("Doc_File_ID", saveFile),
             '                           db.NewParam("Post_Name", Session("Name")),
@@ -253,12 +253,12 @@ Partial Class production_version_Insert
             '                            iUploadedCnt = iUploadedCnt + 1
 
             '                            ' Insert the record into Doc_File
-            '                            Dim saveFile = db.GetValue("INSERT INTO Doc_File (DocID, Doc_File) VALUES (@DocID, @Doc_File); SELECT SCOPE_IDENTITY()",
+            '                            Dim saveFile = db.GetValue("INSERT INTO Doc_File (DocID, Doc_File) VALUES (@DocID, @Doc_File) RETURNING Doc_File_ID",
             '                                db.NewParam("DocID", saveinsert),
             '                                db.NewParam("Doc_File", hpf.FileName))
 
             '                            ' Insert the record into Doc_File_Log
-            '                            Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File,Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File,@Post_Name, GETDATE(), 'เพิ่ม')",
+            '                            Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File,Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File,@Post_Name, NOW(), 'เพิ่ม')",
             '                               db.NewParam("DocID", saveinsert),
             '                               db.NewParam("Doc_File_ID", saveFile),
             '                               db.NewParam("Post_Name", Session("Name")),
@@ -301,12 +301,12 @@ Partial Class production_version_Insert
                             iUploadedCnt = iUploadedCnt + 1
 
                             ' Insert the record into Doc_File
-                            Dim saveFile = db.GetValue("INSERT INTO Doc_File (DocID, Doc_File) VALUES (@DocID, @Doc_File); SELECT SCOPE_IDENTITY()",
+                            Dim saveFile = db.GetValue("INSERT INTO Doc_File (DocID, Doc_File) VALUES (@DocID, @Doc_File) RETURNING Doc_File_ID",
                     db.NewParam("DocID", saveinsert),
                     db.NewParam("Doc_File", fileName))
 
                             ' Insert the record into Doc_File_Log
-                            Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File,Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File,@Post_Name, GETDATE(), 'เพิ่ม')",
+                            Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File,Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File,@Post_Name, NOW(), 'เพิ่ม')",
                     db.NewParam("DocID", saveinsert),
                     db.NewParam("Doc_File_ID", saveFile),
                     db.NewParam("Post_Name", Session("Name")),
@@ -398,8 +398,8 @@ Partial Class production_version_Insert
 
 
     Private Sub production_version_Insert_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
-        If db.GetValue("SELECT COUNT(*) AS COUNT FROM dbo.MAS_DOC INNER JOIN dbo.Permission_TB ON dbo.MAS_DOC.DocID = dbo.Permission_TB.DocID GROUP BY dbo.MAS_DOC.DocID, dbo.Permission_TB.Email HAVING (dbo.Permission_TB.Email = @Email) ", db.NewParam("Email", Session("Email"))) > 0 Then
+        Dim db = PgDb.Platform()
+        If db.GetValue("SELECT COUNT(*) AS COUNT FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID GROUP BY MAS_DOC.DocID, Permission_TB.Email HAVING (Permission_TB.Email = @Email) ", db.NewParam("Email", Session("Email"))) > 0 Then
             ClientScript.RegisterStartupScript(Me.GetType(), "alert", "Swal.fire({ title: 'ไม่สามารถเพิ่มได้', text: 'เนื่องจากท่านมีเอกสารโปรเจคอยู่แล้ว!', icon: 'warning', confirmButtonText: 'OK' }).then((result) => { window.location.href='Main_Doc.aspx'; });", True)
             'Response.Redirect("index.aspx")
         Else
@@ -410,8 +410,8 @@ Partial Class production_version_Insert
 
 
     'Protected Sub btnalert(sender As Object, e As EventArgs) Handles Button2.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
-    '    Dim saveinsert = db.GetValue("insert into MAS_DOC (Student_Name,Mobile,Doc_Name,Doc_NameEN,Doc_Type,Doc_File,Email) VALUES (@Student_Name,@Mobile,@Doc_Name,@Doc_NameEN,@Doc_Type,@Doc_File,@Email)SELECT SCOPE_IDENTITY()",
+    '    Dim db = PgDb.Platform()
+    '    Dim saveinsert = db.GetValue("insert into MAS_DOC (Student_Name,Mobile,Doc_Name,Doc_NameEN,Doc_Type,Doc_File,Email) VALUES (@Student_Name,@Mobile,@Doc_Name,@Doc_NameEN,@Doc_Type,@Doc_File,@Email) RETURNING DocID",
     '                db.NewParam("Student_Name", txtname.Text),
     '                db.NewParam("Mobile", txtphonenumber.Text),
     '                db.NewParam("Doc_Name", txtnamedoc.Text),

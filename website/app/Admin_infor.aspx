@@ -103,7 +103,7 @@
                             window.location.href = 'Admin_infor_See.aspx?docID=' + docID;
                         }
                     </script>
-                        <asp:SqlDataSource runat="server" ID="SqlDataSourceInfor" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT DocID, Doc_Name, Doc_NameEN, Student_Name, Student_Name2, Name_teacherPJ FROM MAS_DOC">
+                        <asp:SqlDataSource runat="server" ID="SqlDataSourceInfor" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT DocID, Doc_Name, Doc_NameEN, Student_Name, Student_Name2, Name_teacherPJ FROM MAS_DOC">
                     </asp:SqlDataSource>
 
                 </div>

@@ -1,5 +1,5 @@
 ﻿Imports System.Data
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.Linq
 Imports System.Text
 
@@ -36,16 +36,16 @@ Partial Class production_version_Code
 
         ' ขอบเขต: แอดมินเห็นทั้งหมด, คนอื่นเห็นโค้ดของโครงงานที่ผ่าน 3/3 และโครงงานที่ตัวเองเกี่ยวข้อง
         Dim conds As New List(Of String)
-        Dim ps As New List(Of SqlParameter) From {Shell.P("@Email", email)}
+        Dim ps As New List(Of NpgsqlParameter) From {Shell.P("@Email", email)}
         If role = "3" Then
             ScopeNote = "โค้ดและฟังก์ชันจากทุกโครงงานในระบบ"
         Else
             ScopeNote = "โค้ดจากคลังโครงงานที่ผ่านครบ 3/3 และโครงงานที่คุณเกี่ยวข้อง ใช้เป็นแนวทางในการทำโครงงาน"
-            conds.Add("(m.Submit_TC = N'ผ่าน3/3' OR c.DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Email))")
+            conds.Add("(m.Submit_TC = 'ผ่าน3/3' OR c.DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Email))")
         End If
         If Q <> "" Then
             conds.Add("(c.Doc_Functions_Code LIKE @Q OR c.Doc_List_Code LIKE @Q OR m.Doc_Name LIKE @Q OR m.Doc_NameEN LIKE @Q)")
-            ps.Add(Shell.P("@Q", "%" & Q.Replace("[", "[[]").Replace("%", "[%]").Replace("_", "[_]") & "%"))
+            ps.Add(Shell.P("@Q", "%" & Q.Replace("\", "\\").Replace("%", "\%").Replace("_", "\_") & "%"))
         End If
         Dim onlyDoc As Integer
         If Integer.TryParse(Request.QueryString("doc"), onlyDoc) AndAlso onlyDoc > 0 Then
@@ -59,14 +59,14 @@ Partial Class production_version_Code
                 inList.Add("@L" & i)
                 ps.Add(Shell.P("@L" & i, names(i)))
             Next
-            conds.Add("ISNULL(c.Doc_List_Type, N'') IN (" & String.Join(",", inList) & ")")
+            conds.Add("COALESCE(c.Doc_List_Type, '') IN (" & String.Join(",", inList) & ")")
         End If
 
         Dim dt = Shell.Query(
-            "SELECT TOP 300 c.Doc_List_ID, c.DocID, c.Doc_List_Type, c.Doc_Functions_Code, c.Doc_List_Code, c.Doc_Date_Save, m.Doc_Name, m.Submit_TC, " &
+            "SELECT c.Doc_List_ID, c.DocID, c.Doc_List_Type, c.Doc_Functions_Code, c.Doc_List_Code, c.Doc_Date_Save, m.Doc_Name, m.Submit_TC, " &
             "CASE WHEN EXISTS (SELECT 1 FROM Permission_TB p WHERE p.DocID = c.DocID AND p.Email = @Email) THEN 1 ELSE 0 END AS IsMine " &
             "FROM Doc_List_TB c JOIN MAS_DOC m ON m.DocID = c.DocID" &
-            If(conds.Count > 0, " WHERE " & String.Join(" AND ", conds), "") & " ORDER BY c.Doc_Date_Save DESC", ps.ToArray())
+            If(conds.Count > 0, " WHERE " & String.Join(" AND ", conds), "") & " ORDER BY c.Doc_Date_Save DESC" & " LIMIT 300", ps.ToArray())
         ResultCount = dt.Rows.Count
 
         Dim current As DataRow = Nothing

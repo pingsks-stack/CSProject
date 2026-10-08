@@ -51,3 +51,12 @@ CSProject/
 class ของ Tailwind ใช้ prefix `tw-` (กันชนกับ Bootstrap ของ DevExpress) สีอยู่ในตัวแปร `--c-*` ของ `tailwind/input.css`
 หลังแก้ class ในหน้าเว็บ ให้ดับเบิลคลิก `tailwind/build.cmd`
 (ต้องมี `tailwind/tailwindcss.exe` — ดาวน์โหลด `tailwindcss-windows-x64.exe` v3.4.19 จาก GitHub ของ Tailwind แล้วเปลี่ยนชื่อ)
+
+
+
+
+## ทุกบัญชีใช้รหัสผ่าน Demo@1234
+## บทบาท	Username	หน้าแรกหลังล็อกอิน
+## นิสิต	demo_student	Doc_All
+## อาจารย์	demo_teacher	Doc_AllAJ
+## แอดมิน	demo_admin	For_Admin

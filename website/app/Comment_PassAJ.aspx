@@ -128,7 +128,7 @@
                         </ItemTemplate>
                     </asp:DataList>
 
-                    <asp:SqlDataSource runat="server" ID="SqlDataSourceShow" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Permission_ID, DocID, Name, Comment_Text, Date_Save, Post_Name_RS FROM Comment_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID)">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSourceShow" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Permission_ID, DocID, Name, Comment_Text, Date_Save, Post_Name_RS FROM Comment_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID)">
                         <SelectParameters>
                             <asp:QueryStringParameter QueryStringField="DocID" Name="DocID"></asp:QueryStringParameter>
                             <asp:QueryStringParameter QueryStringField="Permission_ID" Name="Permission_ID"></asp:QueryStringParameter>

@@ -36,8 +36,8 @@
                         <asp:ListItem Text="-- เลือกประเภท --" Value=""></asp:ListItem>
                     </asp:DropDownList>
                     <asp:RequiredFieldValidator ID="RequiredDocType" runat="server" ErrorMessage="กรุณาเลือกประเภทโครงงาน" ControlToValidate="ddlDocType" InitialValue="" Display="Dynamic" CssClass="tw-mt-1 tw-block tw-text-xs tw-text-bad"></asp:RequiredFieldValidator>
-                    <asp:SqlDataSource runat="server" ID="SqlDocType" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>'
-                        SelectCommand="SELECT Doc_Type FROM DocTypeTB ORDER BY CASE WHEN Doc_Type = N'Other' THEN 1 ELSE 0 END, TypeID"></asp:SqlDataSource>
+                    <asp:SqlDataSource runat="server" ID="SqlDocType" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>'
+                        SelectCommand="SELECT Doc_Type FROM DocTypeTB ORDER BY CASE WHEN Doc_Type = 'Other' THEN 1 ELSE 0 END, TypeID"></asp:SqlDataSource>
                 </div>
 
                 <div>

@@ -17,7 +17,7 @@ Partial Class production_version_Doc_Student
             "(SELECT COUNT(*) FROM Doc_File f WHERE f.DocID = m.DocID) AS Files, " &
             "(SELECT COUNT(*) FROM Doc_List_TB c WHERE c.DocID = m.DocID) AS Codes " &
             "FROM Permission_TB p JOIN MAS_DOC m ON m.DocID = p.DocID " &
-            "WHERE p.Email = @Email AND p.Urole = N'2' ORDER BY CASE WHEN p.Submit_TC IS NULL THEN 0 ELSE 1 END, m.Doc_dt_Save DESC",
+            "WHERE p.Email = @Email AND p.Urole = '2' ORDER BY CASE WHEN p.Submit_TC IS NULL THEN 0 ELSE 1 END, m.Doc_dt_Save DESC",
             Shell.P("@Email", email))
 
         Dim waiting As Integer = 0, approved As Integer = 0

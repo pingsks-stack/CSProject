@@ -8,16 +8,16 @@ Partial Class production_version_dashboard_Teacher
     Protected MonthLabels, MonthFiles, MonthEdits, StatusLabels, StatusValues As String
 
     ' โครงงานที่อาจารย์คนนี้ดูแล
-    Private Const MyDocs As String = "{DocID} IN (SELECT DocID FROM Permission_TB WHERE Email = @Email AND Urole = N'2')"
+    Private Const MyDocs As String = "{DocID} IN (SELECT DocID FROM Permission_TB WHERE Email = @Email AND Urole = '2')"
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
         Dim email As String = Convert.ToString(Session("Email"))
         Dim scope As String = MyDocs.Replace("{DocID}", "DocID")
 
         Dim total = Dash.Count("SELECT COUNT(*) FROM MAS_DOC WHERE " & scope, Shell.P("@Email", email))
-        Dim advisor = Dash.Count("SELECT COUNT(*) FROM Permission_TB WHERE Email = @Email AND Urole = N'2' AND Urole_TC = N'ที่ปรึกษา'", Shell.P("@Email", email))
-        Dim passed = Dash.Count("SELECT COUNT(*) FROM MAS_DOC WHERE Submit_TC = N'ผ่าน3/3' AND " & scope, Shell.P("@Email", email))
-        Dim myApproved = Dash.Count("SELECT COUNT(*) FROM Permission_TB WHERE Email = @Email AND Urole = N'2' AND Submit_TC = N'ผ่าน'", Shell.P("@Email", email))
+        Dim advisor = Dash.Count("SELECT COUNT(*) FROM Permission_TB WHERE Email = @Email AND Urole = '2' AND Urole_TC = 'ที่ปรึกษา'", Shell.P("@Email", email))
+        Dim passed = Dash.Count("SELECT COUNT(*) FROM MAS_DOC WHERE Submit_TC = 'ผ่าน3/3' AND " & scope, Shell.P("@Email", email))
+        Dim myApproved = Dash.Count("SELECT COUNT(*) FROM Permission_TB WHERE Email = @Email AND Urole = '2' AND Submit_TC = 'ผ่าน'", Shell.P("@Email", email))
         Dim files = Dash.Count("SELECT COUNT(*) FROM Doc_File WHERE " & scope, Shell.P("@Email", email))
         Dim pending = Shell.TeacherPending(email)
 
@@ -28,15 +28,15 @@ Partial Class production_version_dashboard_Teacher
             Dash.Kpi("files", "info", "ไฟล์เอกสาร", files, "ในโครงงานที่ดูแล", "spark-files")
 
         Dim m = Dash.Monthly({
-            "SELECT Date_Delete AS D FROM Doc_File_Log WHERE " & scope & " AND Action IN (N'Insert', N'เพิ่ม', N'เพิ่มไฟล์', N'เพิ่มไฟล์ใหม่')",
+            "SELECT Date_Delete AS D FROM Doc_File_Log WHERE " & scope & " AND Action IN ('Insert', 'เพิ่ม', 'เพิ่มไฟล์', 'เพิ่มไฟล์ใหม่')",
             "SELECT Doc_dt_Save AS D FROM MAS_DOC_LOG WHERE " & scope}, Shell.P("@Email", email))
         MonthLabels = m.Labels : MonthFiles = m.Series(0) : MonthEdits = m.Series(1)
 
         Dim s = Dash.Pairs(
-            "SELECT CASE WHEN Submit_TC = N'ผ่าน3/3' THEN N'ผ่านครบ 3/3' WHEN Submit_TC LIKE N'ผ่าน%' THEN N'ผ่านบางส่วน' " &
-            "WHEN Submit_TC LIKE N'%ไม่ผ่าน%' THEN N'ไม่ผ่าน' ELSE N'รอพิจารณา' END AS Name, COUNT(*) AS N " &
-            "FROM MAS_DOC WHERE " & scope & " GROUP BY CASE WHEN Submit_TC = N'ผ่าน3/3' THEN N'ผ่านครบ 3/3' WHEN Submit_TC LIKE N'ผ่าน%' THEN N'ผ่านบางส่วน' " &
-            "WHEN Submit_TC LIKE N'%ไม่ผ่าน%' THEN N'ไม่ผ่าน' ELSE N'รอพิจารณา' END", Shell.P("@Email", email))
+            "SELECT CASE WHEN Submit_TC = 'ผ่าน3/3' THEN 'ผ่านครบ 3/3' WHEN Submit_TC LIKE 'ผ่าน%' THEN 'ผ่านบางส่วน' " &
+            "WHEN Submit_TC LIKE '%ไม่ผ่าน%' THEN 'ไม่ผ่าน' ELSE 'รอพิจารณา' END AS Name, COUNT(*) AS N " &
+            "FROM MAS_DOC WHERE " & scope & " GROUP BY CASE WHEN Submit_TC = 'ผ่าน3/3' THEN 'ผ่านครบ 3/3' WHEN Submit_TC LIKE 'ผ่าน%' THEN 'ผ่านบางส่วน' " &
+            "WHEN Submit_TC LIKE '%ไม่ผ่าน%' THEN 'ไม่ผ่าน' ELSE 'รอพิจารณา' END", Shell.P("@Email", email))
         StatusLabels = s(0) : StatusValues = s(1)
 
         Dim sb As New StringBuilder()

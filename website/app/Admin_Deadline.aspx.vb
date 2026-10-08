@@ -30,7 +30,7 @@ Partial Class production_version_Admin_Deadline
 
     Private Function AcademicYears() As List(Of String)
         Dim years As New HashSet(Of String)
-        For Each r As DataRow In Shell.Query("SELECT DISTINCT Class_Year_No FROM MAS_DOC WHERE ISNULL(Class_Year_No, N'') <> N'' UNION SELECT DISTINCT Class_Year_No FROM Deadline_TB").Rows
+        For Each r As DataRow In Shell.Query("SELECT DISTINCT Class_Year_No FROM MAS_DOC WHERE COALESCE(Class_Year_No, '') <> '' UNION SELECT DISTINCT Class_Year_No FROM Deadline_TB").Rows
             years.Add(Convert.ToString(r(0)))
         Next
         ' ภาคปัจจุบันและภาคถัดไป

@@ -1,7 +1,6 @@
 ﻿Imports System.Data
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.IO
-Imports Zulu.Data
 Imports DevExpress.Web
 Imports DevExpress.Web.Bootstrap
 Imports System.Diagnostics
@@ -45,14 +44,14 @@ Partial Class production_version_Doc_Student
 
     '        Dim connectionString As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
 
-    '        Using connection As New SqlConnection(connectionString)
+    '        Using connection As New NpgsqlConnection(connectionString)
     '            connection.Open()
 
     '            Dim masSubSelectQuery As String = "SELECT SubAddAj_ID,DocID, Name, Email, Mobile, Urole, Urole_TC, Status, Status_Add FROM SubAdd_AJ_TB WHERE Email = @Email"
 
-    '            Using masSubSelectCommand As New SqlCommand(masSubSelectQuery, connection)
-    '                masSubSelectCommand.Parameters.AddWithValue("@Email", email)
-    '                Using reader As SqlDataReader = masSubSelectCommand.ExecuteReader()
+    '            Using masSubSelectCommand As New NpgsqlCommand(masSubSelectQuery, connection)
+    '                masSubSelectCommand.Parameters.Add(PgDb.Param("@Email", email))
+    '                Using reader As NpgsqlDataReader = masSubSelectCommand.ExecuteReader()
     '                    If reader.Read() Then
     '                        Dim SubAddAjID As String = reader("SubAddAj_ID").ToString()
     '                        Dim docid As String = reader("DocID").ToString()
@@ -67,13 +66,13 @@ Partial Class production_version_Doc_Student
 
     '                        Dim subInsertQuery As String = "INSERT INTO Permission_TB (DocID, Name, Email, Mobile, Urole, Urole_TC) VALUES (@DocID, @Name, @Email, @Mobile, @Urole, @Urole_TC)"
 
-    '                        Using subInsertCommand As New SqlCommand(subInsertQuery, connection)
-    '                            subInsertCommand.Parameters.AddWithValue("@DocID", docid)
-    '                            subInsertCommand.Parameters.AddWithValue("@Name", name)
-    '                            subInsertCommand.Parameters.AddWithValue("@Email", email1)
-    '                            subInsertCommand.Parameters.AddWithValue("@Mobile", mobile)
-    '                            subInsertCommand.Parameters.AddWithValue("@Urole", urole)
-    '                            subInsertCommand.Parameters.AddWithValue("@Urole_TC", uroletc)
+    '                        Using subInsertCommand As New NpgsqlCommand(subInsertQuery, connection)
+    '                            subInsertCommand.Parameters.Add(PgDb.Param("@DocID", docid))
+    '                            subInsertCommand.Parameters.Add(PgDb.Param("@Name", name))
+    '                            subInsertCommand.Parameters.Add(PgDb.Param("@Email", email1))
+    '                            subInsertCommand.Parameters.Add(PgDb.Param("@Mobile", mobile))
+    '                            subInsertCommand.Parameters.Add(PgDb.Param("@Urole", urole))
+    '                            subInsertCommand.Parameters.Add(PgDb.Param("@Urole_TC", uroletc))
 
 
     '                            subInsertCommand.ExecuteNonQuery()
@@ -81,10 +80,10 @@ Partial Class production_version_Doc_Student
 
     '                        Dim updateQuery As String = "UPDATE SubAdd_AJ_TB SET Status_Add = @Status_Add, Status = @Status WHERE SubAddAj_ID = @SubAddAj_ID"
 
-    '                        Using updateCommand As New SqlCommand(updateQuery, connection)
-    '                            updateCommand.Parameters.AddWithValue("@Status_Add", "1")
-    '                            updateCommand.Parameters.AddWithValue("@Status", "ยืนยันแล้ว")
-    '                            updateCommand.Parameters.AddWithValue("@SubAddAj_ID", SubAddAjID)
+    '                        Using updateCommand As New NpgsqlCommand(updateQuery, connection)
+    '                            updateCommand.Parameters.Add(PgDb.Param("@Status_Add", "1"))
+    '                            updateCommand.Parameters.Add(PgDb.Param("@Status", "ยืนยันแล้ว"))
+    '                            updateCommand.Parameters.Add(PgDb.Param("@SubAddAj_ID", SubAddAjID))
 
     '                            updateCommand.ExecuteNonQuery()
     '                        End Using
@@ -92,9 +91,9 @@ Partial Class production_version_Doc_Student
 
     '                        Dim updateQuery2 As String = "UPDATE MAS_DOC SET Name_teacherPJ = @Name_teacherPJ WHERE DocID = @DocID"
 
-    '                        Using updateCommand2 As New SqlCommand(updateQuery2, connection)
-    '                            updateCommand2.Parameters.AddWithValue("@Name_teacherPJ", name)
-    '                            updateCommand2.Parameters.AddWithValue("@DocID", docid)
+    '                        Using updateCommand2 As New NpgsqlCommand(updateQuery2, connection)
+    '                            updateCommand2.Parameters.Add(PgDb.Param("@Name_teacherPJ", name))
+    '                            updateCommand2.Parameters.Add(PgDb.Param("@DocID", docid))
 
     '                            updateCommand2.ExecuteNonQuery()
     '                        End Using
@@ -126,14 +125,14 @@ Partial Class production_version_Doc_Student
 
             Dim connectionString As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
 
-            Using connection As New SqlConnection(connectionString)
+            Using connection As New NpgsqlConnection(connectionString)
                 connection.Open()
 
                 Dim masSubSelectQuery As String = "SELECT SubAddAj_ID,DocID, Name, Email, Mobile, Urole, Urole_TC, Status, Status_Add FROM SubAdd_AJ_TB WHERE SubAddAj_ID = @SubAddAj_ID"
 
-                Using masSubSelectCommand As New SqlCommand(masSubSelectQuery, connection)
-                    masSubSelectCommand.Parameters.AddWithValue("@SubAddAj_ID", SubAddAjID)
-                    Using reader As SqlDataReader = masSubSelectCommand.ExecuteReader()
+                Using masSubSelectCommand As New NpgsqlCommand(masSubSelectQuery, connection)
+                    masSubSelectCommand.Parameters.Add(PgDb.Param("@SubAddAj_ID", SubAddAjID))
+                    Using reader As NpgsqlDataReader = masSubSelectCommand.ExecuteReader()
                         If reader.Read() Then
                             Dim docid As String = reader("DocID").ToString()
                             Dim name As String = reader("Name").ToString()
@@ -147,24 +146,24 @@ Partial Class production_version_Doc_Student
 
                             Dim subInsertQuery As String = "INSERT INTO Permission_TB (DocID, Name, Email, Mobile, Urole, Urole_TC) VALUES (@DocID, @Name, @Email, @Mobile, @Urole, @Urole_TC)"
 
-                            Using subInsertCommand As New SqlCommand(subInsertQuery, connection)
-                                subInsertCommand.Parameters.AddWithValue("@DocID", docid)
-                                subInsertCommand.Parameters.AddWithValue("@Name", name)
-                                subInsertCommand.Parameters.AddWithValue("@Email", email1)
-                                subInsertCommand.Parameters.AddWithValue("@Mobile", mobile)
-                                subInsertCommand.Parameters.AddWithValue("@Urole", urole)
-                                subInsertCommand.Parameters.AddWithValue("@Urole_TC", uroletc)
+                            Using subInsertCommand As New NpgsqlCommand(subInsertQuery, connection)
+                                subInsertCommand.Parameters.Add(PgDb.Param("@DocID", docid))
+                                subInsertCommand.Parameters.Add(PgDb.Param("@Name", name))
+                                subInsertCommand.Parameters.Add(PgDb.Param("@Email", email1))
+                                subInsertCommand.Parameters.Add(PgDb.Param("@Mobile", mobile))
+                                subInsertCommand.Parameters.Add(PgDb.Param("@Urole", urole))
+                                subInsertCommand.Parameters.Add(PgDb.Param("@Urole_TC", uroletc))
 
 
                                 subInsertCommand.ExecuteNonQuery()
                             End Using
 
-                            Dim updateQuery As String = "UPDATE SubAdd_AJ_TB SET Status_Add = @Status_Add, Status = @Status, Date_Confirm = getdate() WHERE SubAddAj_ID = @SubAddAj_ID"
+                            Dim updateQuery As String = "UPDATE SubAdd_AJ_TB SET Status_Add = @Status_Add, Status = @Status, Date_Confirm = NOW() WHERE SubAddAj_ID = @SubAddAj_ID"
 
-                            Using updateCommand As New SqlCommand(updateQuery, connection)
-                                updateCommand.Parameters.AddWithValue("@Status_Add", "1")
-                                updateCommand.Parameters.AddWithValue("@Status", "ยืนยันแล้ว")
-                                updateCommand.Parameters.AddWithValue("@SubAddAj_ID", SubAddAjID)
+                            Using updateCommand As New NpgsqlCommand(updateQuery, connection)
+                                updateCommand.Parameters.Add(PgDb.Param("@Status_Add", "1"))
+                                updateCommand.Parameters.Add(PgDb.Param("@Status", "ยืนยันแล้ว"))
+                                updateCommand.Parameters.Add(PgDb.Param("@SubAddAj_ID", SubAddAjID))
 
                                 updateCommand.ExecuteNonQuery()
                             End Using
@@ -172,9 +171,9 @@ Partial Class production_version_Doc_Student
 
                             Dim updateQuery2 As String = "UPDATE MAS_DOC SET Name_teacherPJ = @Name_teacherPJ WHERE DocID = @DocID"
 
-                            Using updateCommand2 As New SqlCommand(updateQuery2, connection)
-                                updateCommand2.Parameters.AddWithValue("@Name_teacherPJ", name)
-                                updateCommand2.Parameters.AddWithValue("@DocID", docid)
+                            Using updateCommand2 As New NpgsqlCommand(updateQuery2, connection)
+                                updateCommand2.Parameters.Add(PgDb.Param("@Name_teacherPJ", name))
+                                updateCommand2.Parameters.Add(PgDb.Param("@DocID", docid))
 
                                 updateCommand2.ExecuteNonQuery()
                             End Using
@@ -212,13 +211,13 @@ Partial Class production_version_Doc_Student
             ' ตามด้วยโค้ดอื่น ๆ ที่ต้องการในการปรับสถานะ
             Dim connectionString As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
 
-            Using connection As New SqlConnection(connectionString)
+            Using connection As New NpgsqlConnection(connectionString)
                 connection.Open()
 
-                Dim updateStatusQuery As String = "UPDATE SubAdd_AJ_TB SET Status = 'ถูกปฏิเสธ',Status_Add = '1', Date_Confirm = getdate() WHERE SubAddAj_ID = @SubAddAj_ID"
+                Dim updateStatusQuery As String = "UPDATE SubAdd_AJ_TB SET Status = 'ถูกปฏิเสธ',Status_Add = '1', Date_Confirm = NOW() WHERE SubAddAj_ID = @SubAddAj_ID"
 
-                Using updateStatusCommand As New SqlCommand(updateStatusQuery, connection)
-                    updateStatusCommand.Parameters.AddWithValue("@SubAddAj_ID", SubAddAjID)
+                Using updateStatusCommand As New NpgsqlCommand(updateStatusQuery, connection)
+                    updateStatusCommand.Parameters.Add(PgDb.Param("@SubAddAj_ID", SubAddAjID))
                     updateStatusCommand.ExecuteNonQuery()
                 End Using
             End Using
@@ -248,14 +247,14 @@ Partial Class production_version_Doc_Student
 
     '        Dim connectionString As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
 
-    '        Using connection As New SqlConnection(connectionString)
+    '        Using connection As New NpgsqlConnection(connectionString)
     '            connection.Open()
 
     '            Dim masSubSelectQuery As String = "SELECT SubAddAj_ID,DocID, Name, Email, Mobile, Urole, Urole_TC, Status, Status_Add FROM SubAdd_AJ_TB WHERE Email = @Email"
 
-    '            Using masSubSelectCommand As New SqlCommand(masSubSelectQuery, connection)
-    '                masSubSelectCommand.Parameters.AddWithValue("@Email", email)
-    '                Using reader As SqlDataReader = masSubSelectCommand.ExecuteReader()
+    '            Using masSubSelectCommand As New NpgsqlCommand(masSubSelectQuery, connection)
+    '                masSubSelectCommand.Parameters.Add(PgDb.Param("@Email", email))
+    '                Using reader As NpgsqlDataReader = masSubSelectCommand.ExecuteReader()
     '                    If reader.Read() Then
     '                        Dim SubAddAjID As String = reader("SubAddAj_ID").ToString()
     '                        Dim docid As String = reader("DocID").ToString()
@@ -272,10 +271,10 @@ Partial Class production_version_Doc_Student
 
     '                        Dim updateQuery As String = "UPDATE SubAdd_AJ_TB SET Status_Add = @Status_Add, Status = @Status WHERE SubAddAj_ID = @SubAddAj_ID"
 
-    '                        Using updateCommand As New SqlCommand(updateQuery, connection)
-    '                            updateCommand.Parameters.AddWithValue("@Status_Add", "1")
-    '                            updateCommand.Parameters.AddWithValue("@Status", "ถูกปฏิเสธ")
-    '                            updateCommand.Parameters.AddWithValue("@SubAddAj_ID", SubAddAjID)
+    '                        Using updateCommand As New NpgsqlCommand(updateQuery, connection)
+    '                            updateCommand.Parameters.Add(PgDb.Param("@Status_Add", "1"))
+    '                            updateCommand.Parameters.Add(PgDb.Param("@Status", "ถูกปฏิเสธ"))
+    '                            updateCommand.Parameters.Add(PgDb.Param("@SubAddAj_ID", SubAddAjID))
 
     '                            updateCommand.ExecuteNonQuery()
     '                        End Using

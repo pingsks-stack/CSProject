@@ -1,7 +1,6 @@
 ﻿Imports System.Data
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.IO
-Imports Zulu.Data
 Imports DevExpress.Web
 Partial Class production_version_Admin_infor
     Inherits System.Web.UI.Page
@@ -40,11 +39,11 @@ Partial Class production_version_Admin_infor
         Dim connectionString As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
         Dim docFile As String = ""
 
-        Using connection As New SqlConnection(connectionString)
+        Using connection As New NpgsqlConnection(connectionString)
             connection.Open()
-            Using command As New SqlCommand("SELECT Doc_File FROM Doc_File WHERE Doc_File_ID = @Doc_File_ID", connection)
-                command.Parameters.AddWithValue("@Doc_File_ID", docFileID)
-                Dim reader As SqlDataReader = command.ExecuteReader()
+            Using command As New NpgsqlCommand("SELECT Doc_File FROM Doc_File WHERE Doc_File_ID = @Doc_File_ID", connection)
+                command.Parameters.Add(PgDb.Param("@Doc_File_ID", docFileID))
+                Dim reader As NpgsqlDataReader = command.ExecuteReader()
                 If reader.Read() Then
                     docFile = reader("Doc_File").ToString()
                 End If
@@ -60,7 +59,7 @@ Partial Class production_version_Admin_infor
 
 
     Protected Sub cbload_Load(source As Object, e As CallbackEventArgs) Handles cbload.Callback
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim fullname = db.GetValue("SELECT Name FROM Signin_Signup WHERE (Email = @Email)",
                                db.NewParam("Email", BootstrapTextBoxQR.Text))
 
@@ -70,7 +69,7 @@ Partial Class production_version_Admin_infor
     End Sub
 
     Protected Sub ASPxCallback1_Callback(source As Object, e As CallbackEventArgs) Handles ASPxCallback1.Callback
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim fullname = db.GetValue("SELECT Student_ID FROM Signin_Signup WHERE (Name = @Name)",
                                db.NewParam("Name", txtname.Text))
 
@@ -80,7 +79,7 @@ Partial Class production_version_Admin_infor
     End Sub
 
     Protected Sub ASPxCallback2_Callback(source As Object, e As CallbackEventArgs) Handles ASPxCallback2.Callback
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim fullname = db.GetValue("SELECT Mobile FROM Signin_Signup WHERE (Student_ID = @Student_ID)",
                                db.NewParam("Student_ID", txturole.Text))
 
@@ -97,7 +96,7 @@ Partial Class production_version_Admin_infor
     Protected Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         Dim connectionString As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
 
-        Using connection As New SqlConnection(connectionString)
+        Using connection As New NpgsqlConnection(connectionString)
             connection.Open()
 
             Dim docID As String = Request.QueryString("docID")
@@ -106,22 +105,22 @@ Partial Class production_version_Admin_infor
             Dim checkQuery As String = "SELECT COUNT(*) FROM Permission_TB WHERE DocID = @DocID AND Urole = '1'"
             Dim count As Integer
 
-            Using checkCommand As New SqlCommand(checkQuery, connection)
-                checkCommand.Parameters.AddWithValue("@DocID", docID)
+            Using checkCommand As New NpgsqlCommand(checkQuery, connection)
+                checkCommand.Parameters.Add(PgDb.Param("@DocID", docID))
                 count = Convert.ToInt32(checkCommand.ExecuteScalar())
             End Using
 
             If count >= 2 Then
                 ClientScript.RegisterStartupScript(Me.GetType(), "alert", "Swal.fire({ title: 'แจ้งเตือน', text: 'คุณได้เพิ่มคู่โปรเจคแล้ว!', icon: 'warning', confirmButtonText: 'OK' }).then((result) => { window.location.href='Main_Doc.aspx'; });", True)
             Else
-                Dim insertQuery As String = "INSERT INTO Permission_TB (DocID, Name, Email, Mobile, Student_ID, Urole) VALUES (@DocID, @Name, @Email, @Mobile, @Student_ID, '1'); SELECT SCOPE_IDENTITY()"
+                Dim insertQuery As String = "INSERT INTO Permission_TB (DocID, Name, Email, Mobile, Student_ID, Urole) VALUES (@DocID, @Name, @Email, @Mobile, @Student_ID, '1') RETURNING Permission_ID"
 
-                Using insertCommand As New SqlCommand(insertQuery, connection)
-                    insertCommand.Parameters.AddWithValue("@DocID", docID)
-                    insertCommand.Parameters.AddWithValue("@Email", BootstrapTextBoxQR.Text)
-                    insertCommand.Parameters.AddWithValue("@Name", txtname.Text)
-                    insertCommand.Parameters.AddWithValue("@Mobile", txtMobile.Text)
-                    insertCommand.Parameters.AddWithValue("@Student_ID", txturole.Text)
+                Using insertCommand As New NpgsqlCommand(insertQuery, connection)
+                    insertCommand.Parameters.Add(PgDb.Param("@DocID", docID))
+                    insertCommand.Parameters.Add(PgDb.Param("@Email", BootstrapTextBoxQR.Text))
+                    insertCommand.Parameters.Add(PgDb.Param("@Name", txtname.Text))
+                    insertCommand.Parameters.Add(PgDb.Param("@Mobile", txtMobile.Text))
+                    insertCommand.Parameters.Add(PgDb.Param("@Student_ID", txturole.Text))
 
                     Dim insertedPermissionID As Integer = Convert.ToInt32(insertCommand.ExecuteScalar())
                 End Using
@@ -129,12 +128,12 @@ Partial Class production_version_Admin_infor
 
                 Dim updateQuery As String = "UPDATE MAS_DOC SET Email2=@Email2, Student_Name2 = @Student_Name2, Student_ID2=@Student_ID2, Mobile2=@Mobile2 WHERE DocID = @DocID"
 
-                Using updateCommand As New SqlCommand(updateQuery, connection)
-                    updateCommand.Parameters.AddWithValue("@Email2", BootstrapTextBoxQR.Text)
-                    updateCommand.Parameters.AddWithValue("@Student_Name2", txtname.Text)
-                    updateCommand.Parameters.AddWithValue("@Student_ID2", txturole.Text)
-                    updateCommand.Parameters.AddWithValue("@Mobile2", txtMobile.Text)
-                    updateCommand.Parameters.AddWithValue("@DocID", docID)
+                Using updateCommand As New NpgsqlCommand(updateQuery, connection)
+                    updateCommand.Parameters.Add(PgDb.Param("@Email2", BootstrapTextBoxQR.Text))
+                    updateCommand.Parameters.Add(PgDb.Param("@Student_Name2", txtname.Text))
+                    updateCommand.Parameters.Add(PgDb.Param("@Student_ID2", txturole.Text))
+                    updateCommand.Parameters.Add(PgDb.Param("@Mobile2", txtMobile.Text))
+                    updateCommand.Parameters.Add(PgDb.Param("@DocID", docID))
 
                     updateCommand.ExecuteNonQuery()
                 End Using
@@ -151,7 +150,7 @@ Partial Class production_version_Admin_infor
     End Sub
 
     Protected Sub ASPxCallback3_Callback(source As Object, e As CallbackEventArgs) Handles ASPxCallback3.Callback
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim fullname = db.GetValue("SELECT Name FROM Signin_Signup WHERE (Email = @Email)",
                                    db.NewParam("Email", EmailAJ.Text))
 
@@ -163,7 +162,7 @@ Partial Class production_version_Admin_infor
 
 
     Protected Sub ASPxCallback4_Callback(source As Object, e As CallbackEventArgs) Handles ASPxCallback4.Callback
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim fullname = db.GetValue("SELECT Mobile FROM Signin_Signup WHERE (Name = @Name)",
                                db.NewParam("Name", NameAJ.Text))
 
@@ -173,7 +172,7 @@ Partial Class production_version_Admin_infor
     End Sub
 
     Protected Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim docID As String = Request.QueryString("docID")
         Dim uroleValue As String = GetUroleValueFromSigninSignup(EmailAJ.Text) ' Assuming you have a function to retrieve the Urole value from the Signin_Signup table
 
@@ -222,7 +221,7 @@ Partial Class production_version_Admin_infor
 
 
         ' เพิ่มข้อมูลในกรณีที่ไม่มีการเพิ่มข้อมูลที่ปรึกษาอยู่แล้ว
-        Dim savePermission = db.Execute("INSERT INTO Permission_TB (DocID, Name, Email, Mobile, Urole, Urole_TC) VALUES (@DocID, @Name, @Email, @Mobile,'2', @Urole_TC); SELECT SCOPE_IDENTITY()",
+        Dim savePermission = db.Execute("INSERT INTO Permission_TB (DocID, Name, Email, Mobile, Urole, Urole_TC) VALUES (@DocID, @Name, @Email, @Mobile,'2', @Urole_TC) RETURNING Permission_ID",
                                         db.NewParam("DocID", docID),
                                         db.NewParam("Name", NameAJ.Text),
                                         db.NewParam("Email", EmailAJ.Text),
@@ -250,13 +249,13 @@ Partial Class production_version_Admin_infor
         Dim connectionString As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
         Dim uroleValue As String = ""
 
-        Using connection As New SqlConnection(connectionString)
+        Using connection As New NpgsqlConnection(connectionString)
             connection.Open()
 
-            Using command As New SqlCommand("SELECT Urole FROM Signin_Signup WHERE Email = @Email", connection)
-                command.Parameters.AddWithValue("@Email", email)
+            Using command As New NpgsqlCommand("SELECT Urole FROM Signin_Signup WHERE Email = @Email", connection)
+                command.Parameters.Add(PgDb.Param("@Email", email))
 
-                Using reader As SqlDataReader = command.ExecuteReader()
+                Using reader As NpgsqlDataReader = command.ExecuteReader()
                     If reader.Read() Then
                         uroleValue = reader("Urole").ToString()
                     End If

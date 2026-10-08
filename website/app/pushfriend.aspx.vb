@@ -3,8 +3,7 @@ Imports System.IO
 Imports System.Collections.Generic
 Imports DevExpress.XtraRichEdit.Layout
 Imports System.Data
-Imports System.Data.SqlClient
-Imports Zulu.Data
+Imports Npgsql
 Imports DevExpress.Web
 Imports System
 
@@ -20,7 +19,7 @@ Partial Class production_version_EditUploadfile
 
 
     Protected Sub cbload_Load(source As Object, e As CallbackEventArgs) Handles cbload.Callback
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim fullname = db.GetValue("SELECT Name FROM Signin_Signup WHERE (Email = @Email)",
                                db.NewParam("Email", BootstrapTextBoxQR.Text))
 
@@ -30,7 +29,7 @@ Partial Class production_version_EditUploadfile
     End Sub
 
     Protected Sub ASPxCallback1_Callback(source As Object, e As CallbackEventArgs) Handles ASPxCallback1.Callback
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim fullname = db.GetValue("SELECT Student_ID FROM Signin_Signup WHERE (Name = @Name)",
                                db.NewParam("Name", txtname.Text))
 
@@ -40,7 +39,7 @@ Partial Class production_version_EditUploadfile
     End Sub
 
     Protected Sub ASPxCallback2_Callback(source As Object, e As CallbackEventArgs) Handles ASPxCallback2.Callback
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim fullname = db.GetValue("SELECT Mobile FROM Signin_Signup WHERE (Student_ID = @Student_ID)",
                                db.NewParam("Student_ID", txturole.Text))
 
@@ -56,20 +55,20 @@ Partial Class production_version_EditUploadfile
 
     Protected Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         Dim connectionString As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
-        Using connection As New SqlConnection(connectionString)
+        Using connection As New NpgsqlConnection(connectionString)
             connection.Open()
 
             Dim docID As String = Request.QueryString("docID")
 
             ' Insert query
-            Dim insertQuery As String = "INSERT INTO Permission_TB (DocID, Name, Email, Mobile, Student_ID) VALUES (@DocID, @Name, @Email, @Mobile, @Student_ID); SELECT SCOPE_IDENTITY()"
+            Dim insertQuery As String = "INSERT INTO Permission_TB (DocID, Name, Email, Mobile, Student_ID) VALUES (@DocID, @Name, @Email, @Mobile, @Student_ID) RETURNING Permission_ID"
 
-            Using insertCommand As New SqlCommand(insertQuery, connection)
-                insertCommand.Parameters.AddWithValue("@DocID", docID)
-                insertCommand.Parameters.AddWithValue("@Email", BootstrapTextBoxQR.Text)
-                insertCommand.Parameters.AddWithValue("@Name", txtname.Text)
-                insertCommand.Parameters.AddWithValue("@Mobile", txtMobile.Text)
-                insertCommand.Parameters.AddWithValue("@Student_ID", txturole.Text)
+            Using insertCommand As New NpgsqlCommand(insertQuery, connection)
+                insertCommand.Parameters.Add(PgDb.Param("@DocID", docID))
+                insertCommand.Parameters.Add(PgDb.Param("@Email", BootstrapTextBoxQR.Text))
+                insertCommand.Parameters.Add(PgDb.Param("@Name", txtname.Text))
+                insertCommand.Parameters.Add(PgDb.Param("@Mobile", txtMobile.Text))
+                insertCommand.Parameters.Add(PgDb.Param("@Student_ID", txturole.Text))
 
                 Dim insertedPermissionID As Integer = Convert.ToInt32(insertCommand.ExecuteScalar())
             End Using
@@ -77,12 +76,12 @@ Partial Class production_version_EditUploadfile
             ' Update query
             Dim updateQuery As String = "UPDATE MAS_DOC SET Email2=@Email2, Student_Name2 = @Student_Name2, Student_ID2=@Student_ID2, Mobile2=@Mobile2 WHERE DocID = @DocID"
 
-            Using updateCommand As New SqlCommand(updateQuery, connection)
-                updateCommand.Parameters.AddWithValue("@Email2", BootstrapTextBoxQR.Text)
-                updateCommand.Parameters.AddWithValue("@Student_Name2", txtname.Text)
-                updateCommand.Parameters.AddWithValue("@Student_ID2", txturole.Text)
-                updateCommand.Parameters.AddWithValue("@Mobile2", txtMobile.Text)
-                updateCommand.Parameters.AddWithValue("@DocID", docID)
+            Using updateCommand As New NpgsqlCommand(updateQuery, connection)
+                updateCommand.Parameters.Add(PgDb.Param("@Email2", BootstrapTextBoxQR.Text))
+                updateCommand.Parameters.Add(PgDb.Param("@Student_Name2", txtname.Text))
+                updateCommand.Parameters.Add(PgDb.Param("@Student_ID2", txturole.Text))
+                updateCommand.Parameters.Add(PgDb.Param("@Mobile2", txtMobile.Text))
+                updateCommand.Parameters.Add(PgDb.Param("@DocID", docID))
 
                 updateCommand.ExecuteNonQuery()
             End Using
@@ -105,19 +104,19 @@ Partial Class production_version_EditUploadfile
 
         ' เชื่อมต่อกับฐานข้อมูล
         Dim connectionString As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
-        Using connection As New SqlConnection(connectionString)
+        Using connection As New NpgsqlConnection(connectionString)
             connection.Open()
 
             ' สร้างคำสั่ง SQL สำหรับลบข้อมูลในตาราง Permission_TB ตาม DocID และ Permission_ID
-            Dim deleteCommand As New SqlCommand("DELETE FROM Permission_TB WHERE Permission_ID = @PermissionID", connection)
-            deleteCommand.Parameters.AddWithValue("@PermissionID", permissionId)
+            Dim deleteCommand As New NpgsqlCommand("DELETE FROM Permission_TB WHERE Permission_ID = @PermissionID", connection)
+            deleteCommand.Parameters.Add(PgDb.Param("@PermissionID", permissionId))
 
             ' ลบข้อมูล
             deleteCommand.ExecuteNonQuery()
 
             'สร้างคำสั่ง Sql สำหรับอัปเดตแถวในตาราง MAS_DOC
-            Dim updateDocCommand As New SqlCommand("UPDATE MAS_DOC SET Student_ID2 = NULL, Student_Name2 = NULL, Email2 = NULL, Mobile2 = NULL WHERE DocID = @DocID", connection)
-            updateDocCommand.Parameters.AddWithValue("@DocID", docID)
+            Dim updateDocCommand As New NpgsqlCommand("UPDATE MAS_DOC SET Student_ID2 = NULL, Student_Name2 = NULL, Email2 = NULL, Mobile2 = NULL WHERE DocID = @DocID", connection)
+            updateDocCommand.Parameters.Add(PgDb.Param("@DocID", docID))
 
             ' อัปเดตแถวในตาราง MAS_DOC
             updateDocCommand.ExecuteNonQuery()

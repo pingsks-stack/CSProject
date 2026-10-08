@@ -24,7 +24,7 @@ Public Module Chapters
     ' ดูไฟล์ได้: แอดมิน, สมาชิกโครงงาน, หรือทุกคนถ้าโครงงานผ่าน 3/3 (อยู่ในคลังโครงงาน)
     Public Function CanView(docID As Integer, email As String, role As String) As Boolean
         If role = "3" OrElse IsMember(docID, email) Then Return True
-        Return Dash.Count("SELECT COUNT(*) FROM MAS_DOC WHERE DocID = @D AND Submit_TC = N'ผ่าน3/3'", Shell.P("@D", docID)) > 0
+        Return Dash.Count("SELECT COUNT(*) FROM MAS_DOC WHERE DocID = @D AND Submit_TC = 'ผ่าน3/3'", Shell.P("@D", docID)) > 0
     End Function
 
     ' ส่งไฟล์ได้: นิสิตที่เป็นสมาชิกโครงงาน
@@ -34,7 +34,7 @@ Public Module Chapters
 
     ' ให้ความเห็นได้: อาจารย์ที่อยู่ในโครงงาน
     Public Function CanReview(docID As Integer, email As String, role As String) As Boolean
-        Return role = "2" AndAlso Dash.Count("SELECT COUNT(*) FROM Permission_TB WHERE DocID = @D AND Email = @E AND Urole = N'2'",
+        Return role = "2" AndAlso Dash.Count("SELECT COUNT(*) FROM Permission_TB WHERE DocID = @D AND Email = @E AND Urole = '2'",
                                              Shell.P("@D", docID), Shell.P("@E", email)) > 0
     End Function
 
@@ -51,18 +51,18 @@ Public Module Chapters
 
     ' แผงงานเลยกำหนด (บทที่เลยวันส่งแล้วแต่ยังไม่มีไฟล์) สำหรับ dashboard
     ' docScope เช่น "1 = 1" หรือ "m.DocID IN (...)" ; linkPrefix คือหน้าที่จะเปิดเมื่อคลิก
-    Public Function OverduePanel(docScope As String, linkPrefix As String, ParamArray params As System.Data.SqlClient.SqlParameter()) As String
+    Public Function OverduePanel(docScope As String, linkPrefix As String, ParamArray params As Npgsql.NpgsqlParameter()) As String
         Dim dt = Shell.Query(
-            "SELECT TOP 8 m.DocID, m.Doc_Name, d.Chapter, d.Due_Date, DATEDIFF(day, d.Due_Date, GETDATE()) AS LateDays " &
+            "SELECT m.DocID, m.Doc_Name, d.Chapter, d.Due_Date, (CURRENT_DATE - d.Due_Date::date) AS LateDays " &
             "FROM MAS_DOC m JOIN Deadline_TB d ON d.Class_Year_No = m.Class_Year_No " &
-            "WHERE " & docScope & " AND d.Due_Date < CAST(GETDATE() AS date) " &
+            "WHERE " & docScope & " AND d.Due_Date < CURRENT_DATE " &
             "AND NOT EXISTS (SELECT 1 FROM Doc_Submission s WHERE s.DocID = m.DocID AND s.Chapter = d.Chapter) " &
-            "ORDER BY d.Due_Date", params)
+            "ORDER BY d.Due_Date" & " LIMIT 8", params)
         Dim total As Integer = Dash.Count(
             "SELECT COUNT(*) FROM MAS_DOC m JOIN Deadline_TB d ON d.Class_Year_No = m.Class_Year_No " &
-            "WHERE " & docScope & " AND d.Due_Date < CAST(GETDATE() AS date) " &
+            "WHERE " & docScope & " AND d.Due_Date < CURRENT_DATE " &
             "AND NOT EXISTS (SELECT 1 FROM Doc_Submission s WHERE s.DocID = m.DocID AND s.Chapter = d.Chapter)",
-            params.Select(Function(p) New System.Data.SqlClient.SqlParameter(p.ParameterName, p.Value)).ToArray())
+            params.Select(Function(p) PgDb.Param(p.ParameterName, p.Value)).ToArray())
         If dt.Rows.Count = 0 Then Return ""
         Dim sb As New System.Text.StringBuilder()
         sb.Append("<div class=""panel tw-mt-4 tw-overflow-hidden""><div class=""panel-head""><div><h3 class=""panel-title"">งานเลยกำหนด</h3><p class=""panel-sub tw-text-bad"">")

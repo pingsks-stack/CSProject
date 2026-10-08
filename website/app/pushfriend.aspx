@@ -75,7 +75,7 @@
                             window.location.href = 'MAS_Doc.aspx?docID=' + docID;
                         }
                     </script>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT MAS_DOC.DocID, Permission_TB.Email FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID WHERE (Permission_TB.Email = @Email)">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT MAS_DOC.DocID, Permission_TB.Email FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID WHERE (Permission_TB.Email = @Email)">
                         <SelectParameters>
                             <asp:SessionParameter SessionField="Email" Name="Email"></asp:SessionParameter>
                         </SelectParameters>
@@ -157,7 +157,7 @@
                             </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Permission_TB.Permission_ID, Permission_TB.Name, Permission_TB.Email, Permission_TB.Mobile, Permission_TB.Student_ID, MAS_DOC.DocID, MAS_DOC.Student_ID2, MAS_DOC.Student_Name2, MAS_DOC.Email2, MAS_DOC.Mobile2 FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID WHERE (Permission_TB.DocID = @DocID)">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Permission_TB.Permission_ID, Permission_TB.Name, Permission_TB.Email, Permission_TB.Mobile, Permission_TB.Student_ID, MAS_DOC.DocID, MAS_DOC.Student_ID2, MAS_DOC.Student_Name2, MAS_DOC.Email2, MAS_DOC.Mobile2 FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID WHERE (Permission_TB.DocID = @DocID)">
                         <SelectParameters>
                             <asp:QueryStringParameter Name="DocID" QueryStringField="docID" Type="String" />
                         </SelectParameters>

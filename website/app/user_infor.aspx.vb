@@ -1,7 +1,6 @@
 ﻿Imports System.Data
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.IO
-Imports Zulu.Data
 Imports DevExpress.Web
 Partial Class production_version_user_infor
     Inherits System.Web.UI.Page
@@ -28,10 +27,10 @@ Partial Class production_version_user_infor
 
 
     Function get_disabled(DocID)
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim ret = ""
 
-        If db.GetValue("SELECT COUNT(*) AS COUNT FROM     dbo.Permission_TB GROUP BY DocID, UserID HAVING (DocID = @DocID) AND (UserID = @UserID) ", db.NewParam("DocID", DocID), db.NewParam("UserID", Session("UserID"))) > 0 Then
+        If db.GetValue("SELECT COUNT(*) AS COUNT FROM     Permission_TB GROUP BY DocID, UserID HAVING (DocID = @DocID) AND (UserID = @UserID) ", db.NewParam("DocID", DocID), db.NewParam("UserID", Session("UserID"))) > 0 Then
             ret = "disabled"
         Else
             ret = ""
@@ -47,7 +46,7 @@ Partial Class production_version_user_infor
     End Sub
 
     'Protected Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    '    Dim db = PgDb.Platform()
     '    Dim URL = Request.QueryString("DocID")
     '    db.Execute("update MAS_DOC set Student_Name=@Student_Name where (DocID = @DocID)", db.NewParam("Student_Name", BootstrapTextBox1.text), db.NewParam("DocID", URL))
     '    Dim err
@@ -67,7 +66,7 @@ Partial Class production_version_user_infor
     End Sub
 
     'Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    '    Dim db = PgDb.Platform()
     '    Dim URL = Request.QueryString("DocID")
     '    db.Execute("update MAS_DOC set Student_Name=@Student_Name where (DocID = @DocID)", db.NewParam("Student_Name", Name1.Text), db.NewParam("DocID", URL))
     '    Dim err
@@ -78,7 +77,7 @@ Partial Class production_version_user_infor
     'End Sub
 
     'Protected Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    '    Dim db = PgDb.Platform()
     '    Dim updateCommand As String = "
     '    UPDATE MAS_DOC
     '    SET Student_Name = @Student_Name,
@@ -87,7 +86,7 @@ Partial Class production_version_user_infor
     '    WHERE DocID = @DocID;
 
     '    INSERT INTO MAS_DOC_LOG (DocID, Student_Name, Student_ID, Mobile, Doc_dt_Save)
-    '    SELECT DocID, Student_Name, Student_ID, Mobile, GETDATE()
+    '    SELECT DocID, Student_Name, Student_ID, Mobile, NOW()
     '    FROM MAS_DOC
     '    WHERE DocID = @DocID;
     '"
@@ -113,10 +112,10 @@ Partial Class production_version_user_infor
     '    db.Close()
     'End Sub
     'Protected Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    '    Dim db = PgDb.Platform()
 
     '    ' Insert record into MAS_DOC_LOG table
-    '    Dim insertQuery = "INSERT INTO MAS_DOC_LOG (DocID, Student_Name, Student_ID, Mobile, Doc_dt_Save) " & "VALUES (@DocID, @Student_Name, @Student_ID, @Mobile, GETDATE())"
+    '    Dim insertQuery = "INSERT INTO MAS_DOC_LOG (DocID, Student_Name, Student_ID, Mobile, Doc_dt_Save) " & "VALUES (@DocID, @Student_Name, @Student_ID, @Mobile, NOW())"
     '    Dim insertParams = {
     '    db.NewParam("DocID", txt_ID.Value),
     '    db.NewParam("Student_Name", Name1.Text),
@@ -170,8 +169,8 @@ Partial Class production_version_user_infor
     '    SqlDataSource1.Delete()
     'End Sub
     'Private Sub SaveDeleteAction(ByVal docID As Integer)
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
-    '    Dim saveLog = db.Execute("INSERT INTO MAS_DOC_LOG (DocID, Doc_dt_Save, Action) VALUES (@DocID, GETDATE(), 'Delete')",
+    '    Dim db = PgDb.Platform()
+    '    Dim saveLog = db.Execute("INSERT INTO MAS_DOC_LOG (DocID, Doc_dt_Save, Action) VALUES (@DocID, NOW(), 'Delete')",
     '                    db.NewParam("DocID", docID))
 
     '    'If db.IsError(saveLog) Then
@@ -196,13 +195,13 @@ Partial Class production_version_user_infor
 
 
     'Protected Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    '    Dim db = PgDb.Platform()
     '    Dim update1 = db.Execute("UPDATE MAS_DOC SET Student_Name=@Student_Name, Student_ID=@Student_ID, Mobile=@Mobile WHERE (DocID = @DocID);SELECT SCOPE_IDENTITY()",
     '                      db.NewParam("Student_Name", Name1.Text),
     '                      db.NewParam("DocID", txt_ID.Value),
     '                      db.NewParam("Student_ID", StudentID1.Text),
     '                      db.NewParam("Mobile", Phonenumber1.Text))
-    '    'Dim saveLog = db.GetValue("insert into MAS_DOC_LOG (DocID, Student_Name, Student_ID, Mobile, Doc_dt_Save) VALUES (@DocID, @Student_Name, @Student_ID, @Mobile, GETDATE())",
+    '    'Dim saveLog = db.GetValue("insert into MAS_DOC_LOG (DocID, Student_Name, Student_ID, Mobile, Doc_dt_Save) VALUES (@DocID, @Student_Name, @Student_ID, @Mobile, NOW())",
     '    '                  db.NewParam("Student_Name", Name1.Text),
     '    '                  db.NewParam("DocID", txt_ID.Value),
     '    '                  db.NewParam("Student_ID", StudentID1.Text),
@@ -218,7 +217,7 @@ Partial Class production_version_user_infor
 
 
 
-    'Dim update1 = db.Execute("UPDATE MAS_DOC SET Student_Name=@Student_Name, Student_ID=@Student_ID, Mobile=@Mobile WHERE (DocID = @DocID); INSERT INTO MAS_DOC_LOG (DocID, Student_Name, Student_ID, Mobile, Doc_dt_Save, Action) VALUES (@DocID, @Student_Name, @Student_ID, @Mobile, GETDATE(), 'Edit');SELECT SCOPE_IDENTITY()",
+    'Dim update1 = db.Execute("UPDATE MAS_DOC SET Student_Name=@Student_Name, Student_ID=@Student_ID, Mobile=@Mobile WHERE (DocID = @DocID); INSERT INTO MAS_DOC_LOG (DocID, Student_Name, Student_ID, Mobile, Doc_dt_Save, Action) VALUES (@DocID, @Student_Name, @Student_ID, @Mobile, NOW(), 'Edit') RETURNING Doc_Log_ID",
     '                  db.NewParam("Student_Name", Name1.Text),
     '                  db.NewParam("DocID", txt_ID.Value),
     '                  db.NewParam("Student_ID", StudentID1.Text),
@@ -237,7 +236,7 @@ Partial Class production_version_user_infor
     'db.Close()
     'End Sub
     'Protected Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    '    Dim db = PgDb.Platform()
     '    Dim update1 = db.Execute("update MAS_DOC set Student_Name=@Student_Name , Student_ID = @Student_ID , Mobile=@Mobile where  (DocID = @DocID)", db.NewParam("Student_Name", Name1.Text), db.NewParam("DocID", txt_ID.Value), db.NewParam("Student_ID", StudentID1.Text), db.NewParam("Mobile", Phonenumber1.Text))
 
 
@@ -270,7 +269,7 @@ Partial Class production_version_user_infor
     '    End If
     'End Sub
     'Private Sub DeleteDocFile(ByVal docFileId As Integer)
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    '    Dim db = PgDb.Platform()
     '    Dim saveFile = db.GetValue("insert into Doc_File_Log (DocID,Doc_File) VALUES (@DocID,@Doc_File)",
     '               db.NewParam("DocID", txt_ID.Value),
     '               db.NewParam("Doc_File", docFileId))
@@ -287,7 +286,7 @@ Partial Class production_version_user_infor
 
 
     'Protected Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    '    Dim db = PgDb.Platform()
     '    db.Execute("update MAS_DOC set Student_Name2=@Student_Name2 , Student_ID2 = @Student_ID2 , Mobile2=@Mobile2 where  (DocID = @DocID)", db.NewParam("Student_Name2", Name2.Text), db.NewParam("DocID", txt_ID.Value), db.NewParam("Student_ID2", StudentID2.Text), db.NewParam("Mobile2", Phonenumber2.Text))
 
     '    If (IsPostBack) Then
@@ -301,8 +300,8 @@ Partial Class production_version_user_infor
     'End Sub
 
     'Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
-    '    Dim update1 = db.Execute("update MAS_DOC set Doc_Name=@Doc_Name , Doc_NameEN = @Doc_NameEN  where  (DocID = @DocID);INSERT INTO MAS_DOC_LOG (DocID, Doc_Name, Doc_NameEN,Action,Post_Name,Doc_dt_Save) VALUES (@DocID, @Doc_Name, @Doc_NameEN,'Edit',@Post_Name,getdate());SELECT SCOPE_IDENTITY()",
+    '    Dim db = PgDb.Platform()
+    '    Dim update1 = db.Execute("update MAS_DOC set Doc_Name=@Doc_Name , Doc_NameEN = @Doc_NameEN  where  (DocID = @DocID);INSERT INTO MAS_DOC_LOG (DocID, Doc_Name, Doc_NameEN,Action,Post_Name,Doc_dt_Save) VALUES (@DocID, @Doc_Name, @Doc_NameEN,'Edit',@Post_Name,NOW()) RETURNING Doc_Log_ID",
     '                        db.NewParam("Doc_Name", NamprojectTH.Text),
     '                        db.NewParam("DocID", txt_ID.Value),
     '                        db.NewParam("Post_Name", Session("Name")),
@@ -347,10 +346,10 @@ Partial Class production_version_user_infor
     '                                Path.GetFileName(hpf.FileName))
     '                        iUploadedCnt = iUploadedCnt + 1
 
-    '                        'db.Execute("update Doc_File set Doc_File=@Doc_File where  (DocID = @DocID);INSERT INTO MAS_DOC_LOG (DocID, Doc_File,Doc_dt_Save) VALUES (@DocID, @Doc_File,getdate());SELECT SCOPE_IDENTITY()",
+    '                        'db.Execute("update Doc_File set Doc_File=@Doc_File where  (DocID = @DocID);INSERT INTO MAS_DOC_LOG (DocID, Doc_File,Doc_dt_Save) VALUES (@DocID, @Doc_File,NOW()) RETURNING Doc_Log_ID",
     '                        '        db.NewParam("Doc_File", hpf.FileName),
     '                        '        db.NewParam("DocID", txt_ID.Value))
-    '                        'Dim saveFileLog = db.GetValue("insert into MAS_DOC_LOG (DocID,Doc_File) VALUES (@DocID,@Doc_File);SELECT SCOPE_IDENTITY()",
+    '                        'Dim saveFileLog = db.GetValue("insert into MAS_DOC_LOG (DocID,Doc_File) VALUES (@DocID,@Doc_File) RETURNING Doc_Log_ID",
     '                        '        db.NewParam("DocID", txt_ID.Value),
     '                        '        db.NewParam("Doc_File", hpf.FileName))
     '                        Dim saveFile = db.GetValue("insert into Doc_File (DocID,Doc_File) VALUES (@DocID,@Doc_File)",
@@ -388,7 +387,7 @@ Partial Class production_version_user_infor
     End Sub
 
     'Protected Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    '    Dim db = PgDb.Platform()
     '    If FileUpload1.HasFile Then
     '        Dim iUploadedCnt As Integer = 0
     '        Dim iFailedCnt As Integer = 0
@@ -417,12 +416,12 @@ Partial Class production_version_user_infor
     '                            iUploadedCnt = iUploadedCnt + 1
 
     '                            ' Insert the record into Doc_File
-    '                            Dim saveFile = db.GetValue("INSERT INTO Doc_File (DocID, Doc_File) VALUES (@DocID, @Doc_File); SELECT SCOPE_IDENTITY()",
+    '                            Dim saveFile = db.GetValue("INSERT INTO Doc_File (DocID, Doc_File) VALUES (@DocID, @Doc_File) RETURNING Doc_File_ID",
     '                                db.NewParam("DocID", txt_ID.Value),
     '                                db.NewParam("Doc_File", hpf.FileName))
 
     '                            ' Insert the record into Doc_File_Log
-    '                            Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File,Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File,@Post_Name, GETDATE(), 'Insert')",
+    '                            Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File,Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File,@Post_Name, NOW(), 'Insert')",
     '                               db.NewParam("DocID", txt_ID.Value),
     '                               db.NewParam("Doc_File_ID", saveFile),
     '                               db.NewParam("Post_Name", Session("Name")),
@@ -447,7 +446,7 @@ Partial Class production_version_user_infor
         ' Implement your logic to retrieve the file name using the docFileID
         ' For example, you can use a database query to fetch the file name based on the ID
 
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim fileName As String = ""
 
         ' Execute a query to fetch the file name based on the docFileID
@@ -493,8 +492,8 @@ Partial Class production_version_user_infor
     End Sub
 
     Private Sub SaveDeleteAction(ByVal docFileID As Integer, ByVal fileName As String)
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
-        Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File,Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File,@Post_Name, GETDATE(), 'Delete')",
+        Dim db = PgDb.Platform()
+        Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File,Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File,@Post_Name, NOW(), 'Delete')",
             db.NewParam("DocID", txt_ID.Value),
             db.NewParam("Doc_File_ID", docFileID),
             db.NewParam("Post_Name", Session("Name")),

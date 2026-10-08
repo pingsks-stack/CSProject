@@ -90,7 +90,7 @@
                                     </div>
                                 </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT SubAdd_AJ_TB.SubAddAj_ID, SubAdd_AJ_TB.DocID, SubAdd_AJ_TB.Name, SubAdd_AJ_TB.Email, SubAdd_AJ_TB.Mobile, SubAdd_AJ_TB.Urole, SubAdd_AJ_TB.Urole_TC, SubAdd_AJ_TB.Status, SubAdd_AJ_TB.Post_Name, SubAdd_AJ_TB.Status_Add, MAS_DOC.Doc_Name, MAS_DOC.Doc_NameEN, SubAdd_AJ_TB.Date_Send_NS FROM SubAdd_AJ_TB INNER JOIN MAS_DOC ON SubAdd_AJ_TB.DocID = MAS_DOC.DocID WHERE (SubAdd_AJ_TB.Email = @Email) AND (SubAdd_AJ_TB.Status_Add = N'0')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT SubAdd_AJ_TB.SubAddAj_ID, SubAdd_AJ_TB.DocID, SubAdd_AJ_TB.Name, SubAdd_AJ_TB.Email, SubAdd_AJ_TB.Mobile, SubAdd_AJ_TB.Urole, SubAdd_AJ_TB.Urole_TC, SubAdd_AJ_TB.Status, SubAdd_AJ_TB.Post_Name, SubAdd_AJ_TB.Status_Add, MAS_DOC.Doc_Name, MAS_DOC.Doc_NameEN, SubAdd_AJ_TB.Date_Send_NS FROM SubAdd_AJ_TB INNER JOIN MAS_DOC ON SubAdd_AJ_TB.DocID = MAS_DOC.DocID WHERE (SubAdd_AJ_TB.Email = @Email) AND (SubAdd_AJ_TB.Status_Add = '0')">
                         <SelectParameters>
                             <asp:SessionParameter SessionField="Email" Name="Email"></asp:SessionParameter>
 
@@ -118,7 +118,7 @@
                                     </div>
                                 </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT SubAdd_AJ_TB.SubAddAj_ID, SubAdd_AJ_TB.DocID, SubAdd_AJ_TB.Name, SubAdd_AJ_TB.Email, SubAdd_AJ_TB.Mobile, SubAdd_AJ_TB.Urole, SubAdd_AJ_TB.Urole_TC, SubAdd_AJ_TB.Status, SubAdd_AJ_TB.Post_Name, SubAdd_AJ_TB.Status_Add, MAS_DOC.Doc_Name, MAS_DOC.Doc_NameEN, SubAdd_AJ_TB.Date_Confirm FROM SubAdd_AJ_TB INNER JOIN MAS_DOC ON SubAdd_AJ_TB.DocID = MAS_DOC.DocID WHERE (SubAdd_AJ_TB.Email = @Email) AND (SubAdd_AJ_TB.Status_Add = N'1')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT SubAdd_AJ_TB.SubAddAj_ID, SubAdd_AJ_TB.DocID, SubAdd_AJ_TB.Name, SubAdd_AJ_TB.Email, SubAdd_AJ_TB.Mobile, SubAdd_AJ_TB.Urole, SubAdd_AJ_TB.Urole_TC, SubAdd_AJ_TB.Status, SubAdd_AJ_TB.Post_Name, SubAdd_AJ_TB.Status_Add, MAS_DOC.Doc_Name, MAS_DOC.Doc_NameEN, SubAdd_AJ_TB.Date_Confirm FROM SubAdd_AJ_TB INNER JOIN MAS_DOC ON SubAdd_AJ_TB.DocID = MAS_DOC.DocID WHERE (SubAdd_AJ_TB.Email = @Email) AND (SubAdd_AJ_TB.Status_Add = '1')">
                         <SelectParameters>
                             <asp:SessionParameter SessionField="Email" Name="Email"></asp:SessionParameter>
 

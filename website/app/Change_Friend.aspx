@@ -73,7 +73,7 @@
                             window.location.href = 'MAS_Doc.aspx?docID=' + docID;
                         }
                     </script>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT MAS_DOC.DocID, Permission_TB.Email FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID WHERE (Permission_TB.Email = @Email)">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT MAS_DOC.DocID, Permission_TB.Email FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID WHERE (Permission_TB.Email = @Email)">
                         <SelectParameters>
                             <asp:SessionParameter SessionField="Email" Name="Email"></asp:SessionParameter>
                         </SelectParameters>
@@ -163,7 +163,7 @@
                             </div>
                         </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource4" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Date_Confirm, Last_Post_Name, Action FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Action = N'ขอเปลี่ยนคู่โปรเจค')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource4" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Date_Confirm, Last_Post_Name, Action FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Action = 'ขอเปลี่ยนคู่โปรเจค')">
                         <SelectParameters>
                             <asp:QueryStringParameter Name="DocID" QueryStringField="DocID" Type="String" />
                             <asp:QueryStringParameter Name="Permission_ID" QueryStringField="Permission_ID" Type="String" />
@@ -204,7 +204,7 @@
                                     </div>
                                 </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource3" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Permission_ID, Name, Email, Mobile, Student_ID FROM Permission_TB WHERE (Permission_ID = @Permission_ID)">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource3" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Permission_ID, Name, Email, Mobile, Student_ID FROM Permission_TB WHERE (Permission_ID = @Permission_ID)">
                         <SelectParameters>
                            <asp:QueryStringParameter Name="Permission_ID" QueryStringField="Permission_ID" Type="String" />
                         </SelectParameters>
@@ -246,7 +246,7 @@
                                     </div>
                                 </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Date_Confirm, Last_Post_Name, Action, Last_Email, Last_Mobile, Last_StudentID FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Action = N'ขอลบคู่โปรเจค')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Date_Confirm, Last_Post_Name, Action, Last_Email, Last_Mobile, Last_StudentID FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Action = 'ขอลบคู่โปรเจค')">
                         <SelectParameters>
                             <asp:QueryStringParameter Name="DocID" QueryStringField="DocID" Type="String" />
                             <asp:QueryStringParameter Name="Permission_ID" QueryStringField="Permission_ID" Type="String" />

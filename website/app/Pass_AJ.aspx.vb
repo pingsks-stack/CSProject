@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+﻿Imports Npgsql
 Imports System.IO
 Imports DevExpress.Web
 Imports iTextSharp.text
@@ -31,7 +31,7 @@ Partial Class production_version_Doc_Student
     End Property
 
     'Protected Sub btnGeneratePDF_Click(sender As Object, e As EventArgs)
-    ''    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    ''    Dim db = PgDb.Platform()
     '    Dim docID As String = Request.QueryString("DocID")
     '    Dim permissionID As String = Request.QueryString("Permission_ID")
     '    ' โค้ดสร้าง PDF จะถูกวางที่นี่
@@ -56,8 +56,8 @@ Partial Class production_version_Doc_Student
 
     '    ' คำนวณข้อมูลจากฐานข้อมูล
     '    Dim sql As String = "SELECT DocID, Name, Urole, Submit_TC FROM Permission_TB WHERE DocID = @DocID"
-    '    Dim parameters As New List(Of SqlParameter)()
-    '    parameters.Add(New SqlParameter("@DocID", docID))
+    '    Dim parameters As New List(Of NpgsqlParameter)()
+    '    parameters.Add(New NpgsqlParameter("@DocID", docID))
 
     '    ' ใช้ Zulu.Data.PlatformFactory เพื่อเรียกข้อมูลจากฐานข้อมูล
     '    Dim data = db.GetDataTable(sql, parameters.ToArray())
@@ -88,7 +88,7 @@ Partial Class production_version_Doc_Student
     'End Sub
 
     Protected Sub btnGeneratePDF_Click(sender As Object, e As EventArgs)
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim docID As String = Request.QueryString("DocID")
 
         ' สร้างเอกสาร PDF
@@ -227,8 +227,8 @@ Partial Class production_version_Doc_Student
 
         ' ดึงข้อมูลจากฐานข้อมูล
         Dim sql As String = "SELECT Name, Submit_TC FROM Permission_TB WHERE DocID = @DocID AND Urole = 2"
-        Dim parameters As New List(Of SqlParameter)()
-        parameters.Add(New SqlParameter("@DocID", docID))
+        Dim parameters As New List(Of NpgsqlParameter)()
+        parameters.Add(New NpgsqlParameter("@DocID", docID))
 
         Dim data = db.GetDataTable(sql, parameters.ToArray())
 

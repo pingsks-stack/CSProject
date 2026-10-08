@@ -72,7 +72,7 @@
                         </dx:BootstrapGridView>
                        
                       
-                        <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT DocID, Doc_Name, Doc_NameEN, Student_ID, Student_Name, FacultyID, Email, Mobile, Student_Status, Doc_Type, Class_No, Class_Year_No, Doc_dt_Save FROM MAS_DOC WHERE (Class_No = @Class_No)">
+                        <asp:SqlDataSource runat="server" ID="SqlDataSource1" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT DocID, Doc_Name, Doc_NameEN, Student_ID, Student_Name, FacultyID, Email, Mobile, Student_Status, Doc_Type, Class_No, Class_Year_No, Doc_dt_Save FROM MAS_DOC WHERE (Class_No = @Class_No)">
                             <SelectParameters>
                                 <asp:ControlParameter ControlID="BootstrapComboBox1" PropertyName="Value" Name="Class_No"></asp:ControlParameter>
                             </SelectParameters>
@@ -181,7 +181,7 @@
                             <SettingsSearchPanel Visible="True"></SettingsSearchPanel>
                         </dx:BootstrapGridView>
                        
-                        <asp:SqlDataSource runat="server" ID="SqlDataSource_infor_masdoc" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT MAS_DOC.DocID, MAS_DOC.Doc_Name, MAS_DOC.Doc_NameEN, MAS_DOC.Student_ID, MAS_DOC.Student_Name, MAS_DOC.Email, MAS_DOC.Mobile, MAS_DOC.Class_No, MAS_DOC.Class_Year_No, Permission_TB.UserID, MAS_DOC.Student_ID2, MAS_DOC.Student_Name2, MAS_DOC.Mobile2, MAS_DOC.Doc_dt_Save FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID GROUP BY MAS_DOC.DocID, MAS_DOC.Doc_Name, MAS_DOC.Doc_NameEN, MAS_DOC.Student_ID, MAS_DOC.Student_Name, MAS_DOC.Email, MAS_DOC.Mobile, MAS_DOC.Class_No, MAS_DOC.Class_Year_No, Permission_TB.UserID, MAS_DOC.Student_ID2, MAS_DOC.Student_Name2, MAS_DOC.Mobile2, MAS_DOC.Doc_dt_Save HAVING (MAS_DOC.Class_No = @Class_No)" DeleteCommand="DELETE FROM MAS_DOC WHERE (DocID = @DocID)" UpdateCommand="UPDATE MAS_DOC SET Doc_Name = @Doc_Name, Doc_NameEN = @Doc_NameEN, Student_ID = @Student_ID, Student_Name = @Student_Name, Email = @Email, Mobile = @Mobile, Doc_Type = @Doc_Type, Class_No = @Class_No, Class_Year_No = @Class_Year_No WHERE (DocID = @DocID)">
+                        <asp:SqlDataSource runat="server" ID="SqlDataSource_infor_masdoc" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT MAS_DOC.DocID, MAS_DOC.Doc_Name, MAS_DOC.Doc_NameEN, MAS_DOC.Student_ID, MAS_DOC.Student_Name, MAS_DOC.Email, MAS_DOC.Mobile, MAS_DOC.Class_No, MAS_DOC.Class_Year_No, Permission_TB.UserID, MAS_DOC.Student_ID2, MAS_DOC.Student_Name2, MAS_DOC.Mobile2, MAS_DOC.Doc_dt_Save FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID GROUP BY MAS_DOC.DocID, MAS_DOC.Doc_Name, MAS_DOC.Doc_NameEN, MAS_DOC.Student_ID, MAS_DOC.Student_Name, MAS_DOC.Email, MAS_DOC.Mobile, MAS_DOC.Class_No, MAS_DOC.Class_Year_No, Permission_TB.UserID, MAS_DOC.Student_ID2, MAS_DOC.Student_Name2, MAS_DOC.Mobile2, MAS_DOC.Doc_dt_Save HAVING (MAS_DOC.Class_No = @Class_No)" DeleteCommand="DELETE FROM MAS_DOC WHERE (DocID = @DocID)" UpdateCommand="UPDATE MAS_DOC SET Doc_Name = @Doc_Name, Doc_NameEN = @Doc_NameEN, Student_ID = @Student_ID, Student_Name = @Student_Name, Email = @Email, Mobile = @Mobile, Doc_Type = @Doc_Type, Class_No = @Class_No, Class_Year_No = @Class_Year_No WHERE (DocID = @DocID)">
                             <DeleteParameters>
                                 <asp:Parameter Name="DocID"></asp:Parameter>
                             </DeleteParameters>
@@ -201,7 +201,7 @@
                                 <asp:Parameter Name="DocID"></asp:Parameter>
                             </UpdateParameters>
                         </asp:SqlDataSource>
-                        <asp:SqlDataSource runat="server" ID="SqlDataSource_index" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Doc_Name, Doc_NameEN, Student_Name, Email, Mobile, Doc_Type FROM MAS_DOC WHERE (Email = @Email)">
+                        <asp:SqlDataSource runat="server" ID="SqlDataSource_index" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Doc_Name, Doc_NameEN, Student_Name, Email, Mobile, Doc_Type FROM MAS_DOC WHERE (Email = @Email)">
                             <SelectParameters>
                                 <asp:SessionParameter SessionField="Email" Name="Email"></asp:SessionParameter>
                             </SelectParameters>
@@ -218,11 +218,11 @@
     
 
     <%--<dx:ASPxTextBox ID="txt_ID" runat="server" Width="170px" ClientInstanceName="txt_ID"></dx:ASPxTextBox>--%>
-    <asp:SqlDataSource ID="SqlDataClass" runat="server" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT * FROM [Class_TB]"></asp:SqlDataSource>
-    <asp:SqlDataSource ID="SqlDataClass_year" runat="server" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT * FROM [Class_Year_TB]"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SqlDataClass" runat="server" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT * FROM Class_TB"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SqlDataClass_year" runat="server" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT * FROM Class_Year_TB"></asp:SqlDataSource>
 
    
-    <asp:SqlDataSource ID="SqlDataType" runat="server" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT DocTypeTB.* FROM DocTypeTB"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SqlDataType" runat="server" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT DocTypeTB.* FROM DocTypeTB"></asp:SqlDataSource>
 
     <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -385,7 +385,7 @@
                                     </Columns>
                                 </dx:BootstrapGridView>
 
-                                <asp:SqlDataSource runat="server" ID="SqlDataSource_Permisson" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' DeleteCommand="DELETE FROM [Permission_TB] WHERE [Permission_ID] = @Permission_ID" InsertCommand="INSERT INTO Permission_TB(DocID, UserID, Name, Email) VALUES (@DocID, @UserID, @Name, @Email)" SelectCommand="SELECT DocID, UserID, Name, Email, Permission_ID FROM Permission_TB WHERE (DocID = @DocID)" UpdateCommand="UPDATE Permission_TB SET DocID = @DocID, UserID = @UserID, Name = @Name, Email = @Email WHERE (Permission_ID = @Permission_ID)">
+                                <asp:SqlDataSource runat="server" ID="SqlDataSource_Permisson" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' DeleteCommand="DELETE FROM Permission_TB WHERE Permission_ID = @Permission_ID" InsertCommand="INSERT INTO Permission_TB(DocID, UserID, Name, Email) VALUES (@DocID, @UserID, @Name, @Email)" SelectCommand="SELECT DocID, UserID, Name, Email, Permission_ID FROM Permission_TB WHERE (DocID = @DocID)" UpdateCommand="UPDATE Permission_TB SET DocID = @DocID, UserID = @UserID, Name = @Name, Email = @Email WHERE (Permission_ID = @Permission_ID)">
                                     <DeleteParameters>
                                         <asp:Parameter Name="Permission_ID" Type="Int32"></asp:Parameter>
                                     </DeleteParameters>
@@ -463,7 +463,7 @@
 
 
 
-                                <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT DocID, Doc_File, Doc_File_ID FROM Doc_File WHERE (DocID = @DocID)" DeleteCommand="DELETE FROM Doc_File WHERE (Doc_File_ID = @Doc_File_ID)">
+                                <asp:SqlDataSource runat="server" ID="SqlDataSource1" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT DocID, Doc_File, Doc_File_ID FROM Doc_File WHERE (DocID = @DocID)" DeleteCommand="DELETE FROM Doc_File WHERE (Doc_File_ID = @Doc_File_ID)">
                                     <DeleteParameters>
                                         <asp:Parameter Name="Doc_File_ID"></asp:Parameter>
                                     </DeleteParameters>
@@ -516,7 +516,7 @@
 
                                     </Columns>
                                 </dx:BootstrapGridView>
-                                <asp:SqlDataSource runat="server" ID="SqlDataSource2" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Doc_File_LogID, Doc_File_ID, DocID, Doc_File, Post_Name, Date_Delete, Action FROM Doc_File_Log WHERE (DocID = @DocID)">
+                                <asp:SqlDataSource runat="server" ID="SqlDataSource2" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Doc_File_LogID, Doc_File_ID, DocID, Doc_File, Post_Name, Date_Delete, Action FROM Doc_File_Log WHERE (DocID = @DocID)">
                                     <SelectParameters>
                                         <asp:ControlParameter ControlID="txt_ID" PropertyName="Text" Name="DocID"></asp:ControlParameter>
                                     </SelectParameters>
@@ -564,7 +564,7 @@
 
                                     </Columns>
                                 </dx:BootstrapGridView>
-                                <asp:SqlDataSource runat="server" ID="SqlDataSource3" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Doc_Name, Doc_NameEN, Action, DocID, Post_Name, Doc_dt_Save FROM MAS_DOC_LOG WHERE (DocID = @DocID)">
+                                <asp:SqlDataSource runat="server" ID="SqlDataSource3" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Doc_Name, Doc_NameEN, Action, DocID, Post_Name, Doc_dt_Save FROM MAS_DOC_LOG WHERE (DocID = @DocID)">
                                     <SelectParameters>
                                         <asp:ControlParameter ControlID="txt_ID" PropertyName="Text" Name="DocID"></asp:ControlParameter>
                                     </SelectParameters>

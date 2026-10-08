@@ -28,15 +28,15 @@
         </asp:Repeater>
     </div>
 
-    <asp:SqlDataSource runat="server" ID="SqlTypeStats" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>'
+    <asp:SqlDataSource runat="server" ID="SqlTypeStats" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>'
         SelectCommand="
             WITH c AS (
                 SELECT t.Doc_Type AS TypeName, COUNT(m.DocID) AS Total,
-                       CASE WHEN t.Doc_Type = N'Other' THEN 1 ELSE 0 END AS SortGroup, t.TypeID AS SortID
+                       CASE WHEN t.Doc_Type = 'Other' THEN 1 ELSE 0 END AS SortGroup, t.TypeID AS SortID
                 FROM DocTypeTB t LEFT JOIN MAS_DOC m ON m.Doc_Type = t.Doc_Type
                 GROUP BY t.Doc_Type, t.TypeID
                 UNION ALL
-                SELECT N'ยังไม่ระบุประเภท', COUNT(*), 2, 0 FROM MAS_DOC WHERE Doc_Type IS NULL OR Doc_Type = N''
+                SELECT 'ยังไม่ระบุประเภท', COUNT(*), 2, 0 FROM MAS_DOC WHERE Doc_Type IS NULL OR Doc_Type = ''
             )
             SELECT TypeName, Total, CAST(ROUND(Total * 100.0 / NULLIF(SUM(Total) OVER (), 0), 0) AS int) AS Pct
             FROM c ORDER BY SortGroup, SortID">

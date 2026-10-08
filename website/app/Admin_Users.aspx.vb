@@ -1,5 +1,5 @@
 ﻿Imports System.Data
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.Text
 
 ' จัดการผู้ใช้สำหรับแอดมิน: สร้างบัญชี (รวมอาจารย์), เปลี่ยนบทบาท, รีเซ็ตรหัสผ่าน, ลบบัญชีที่ไม่มีโครงงาน
@@ -31,11 +31,11 @@ Partial Class production_version_Admin_Users
                     Chip("1", "นิสิต", counts("1"), role) & Chip("2", "อาจารย์", counts("2"), role) & Chip("3", "แอดมิน", counts("3"), role)
 
         Dim conds As New List(Of String)
-        Dim ps As New List(Of SqlParameter)
+        Dim ps As New List(Of NpgsqlParameter)
         If role <> "" Then conds.Add("u.Urole = @Role") : ps.Add(Shell.P("@Role", role))
         If Q <> "" Then
             conds.Add("(u.Name LIKE @Q OR u.Username LIKE @Q OR u.Email LIKE @Q OR u.Student_ID LIKE @Q)")
-            ps.Add(Shell.P("@Q", "%" & Q.Replace("[", "[[]").Replace("%", "[%]").Replace("_", "[_]") & "%"))
+            ps.Add(Shell.P("@Q", "%" & Q.Replace("\", "\\").Replace("%", "\%").Replace("_", "\_") & "%"))
         End If
         Dim dt = Shell.Query(
             "SELECT u.UserID, u.Username, u.Name, u.Email, u.Mobile, u.Student_ID, u.Urole, " &
