@@ -78,13 +78,13 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="validationServer01">ชั้นปี</label>
                                             <dx:BootstrapComboBox ID="ClassNo" runat="server" DataSourceID="SqlDataSource1" ValueField="Class_ID" TextField="Class_No"></dx:BootstrapComboBox>
-                                            <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT * FROM [Class_TB]"></asp:SqlDataSource>
+                                            <asp:SqlDataSource runat="server" ID="SqlDataSource1" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT * FROM Class_TB"></asp:SqlDataSource>
                                             <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ErrorMessage="กรุณาเลือกชั้นปี" ControlToValidate="ClassNo" Font-Bold="True" Font-Overline="False" CssClass="text-danger"></asp:RequiredFieldValidator>
                                         </div>
                                        <%-- <div class="col-md-6 mb-3">
                                             <label for="validationServer02">ปีการศึกษา</label>
                                             <dx:BootstrapComboBox ID="Class_year" runat="server" DataSourceID="SqlDataSource2" ValueField="Year_ID" TextField="Class_Year_No"></dx:BootstrapComboBox>
-                                            <asp:SqlDataSource runat="server" ID="SqlDataSource2" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT * FROM [Class_Year_TB]"></asp:SqlDataSource>
+                                            <asp:SqlDataSource runat="server" ID="SqlDataSource2" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT * FROM Class_Year_TB"></asp:SqlDataSource>
                                             <asp:RequiredFieldValidator ID="RequiredFieldValidator8" runat="server" ErrorMessage="กรุณาเลือกปีการศึกษา" ControlToValidate="Class_year" Font-Bold="True" Font-Overline="False" CssClass="text-danger"></asp:RequiredFieldValidator>
                                         </div>
                                     </div>--%>

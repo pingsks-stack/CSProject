@@ -9,7 +9,7 @@ Partial Class production_version_Admin_DocType
     Protected Sub Page_PreRender(sender As Object, e As EventArgs) Handles Me.PreRender
         Dim dt = Shell.Query(
             "SELECT t.TypeID, t.Doc_Type, (SELECT COUNT(*) FROM MAS_DOC m WHERE m.Doc_Type = t.Doc_Type) AS Used " &
-            "FROM DocTypeTB t ORDER BY CASE WHEN t.Doc_Type = N'Other' THEN 1 ELSE 0 END, t.TypeID")
+            "FROM DocTypeTB t ORDER BY CASE WHEN t.Doc_Type = 'Other' THEN 1 ELSE 0 END, t.TypeID")
         Dim sb As New StringBuilder()
         Dim i As Integer = 0
         For Each r As DataRow In dt.Rows
@@ -41,7 +41,7 @@ Partial Class production_version_Admin_DocType
             Alert("ซ้ำ", "มีประเภทนี้อยู่แล้ว", "warning")
             Return
         End If
-        Shell.Exec("INSERT INTO DocTypeTB (TypeID, Doc_Type) SELECT ISNULL(MAX(TypeID), 0) + 1, @Name FROM DocTypeTB", Shell.P("@Name", name))
+        Shell.Exec("INSERT INTO DocTypeTB (TypeID, Doc_Type) SELECT COALESCE(MAX(TypeID), 0) + 1, @Name FROM DocTypeTB", Shell.P("@Name", name))
         txtNewType.Text = ""
         Alert("สำเร็จ", "เพิ่มประเภท """ & name & """ แล้ว", "success")
     End Sub

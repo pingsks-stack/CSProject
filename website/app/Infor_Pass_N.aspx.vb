@@ -1,5 +1,5 @@
 ﻿
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.IO
 Imports DevExpress.Web
 Imports iTextSharp.text
@@ -39,7 +39,7 @@ Partial Class production_version_EditUploadfile
 
 
     'Protected Sub btnGeneratePDF_Click(sender As Object, e As EventArgs)
-    ''    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+    ''    Dim db = PgDb.Platform()
     '    Dim docID As String = Request.QueryString("DocID")
     '    Dim permissionID As String = Request.QueryString("Permission_ID")
     '    ' โค้ดสร้าง PDF จะถูกวางที่นี่
@@ -64,8 +64,8 @@ Partial Class production_version_EditUploadfile
 
     '    ' คำนวณข้อมูลจากฐานข้อมูล
     '    Dim sql As String = "SELECT DocID, Name, Urole, Submit_TC FROM Permission_TB WHERE DocID = @DocID"
-    '    Dim parameters As New List(Of SqlParameter)()
-    '    parameters.Add(New SqlParameter("@DocID", docID))
+    '    Dim parameters As New List(Of NpgsqlParameter)()
+    '    parameters.Add(New NpgsqlParameter("@DocID", docID))
 
     '    ' ใช้ Zulu.Data.PlatformFactory เพื่อเรียกข้อมูลจากฐานข้อมูล
     '    Dim data = db.GetDataTable(sql, parameters.ToArray())
@@ -96,7 +96,7 @@ Partial Class production_version_EditUploadfile
     'End Sub
 
     Protected Sub btnGeneratePDF_Click(sender As Object, e As EventArgs)
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         Dim docID As String = Request.QueryString("DocID")
 
         ' สร้างเอกสาร PDF
@@ -173,7 +173,7 @@ Partial Class production_version_EditUploadfile
 
 
 
-        Dim AJ1 As DataTable = db.GetDataTable("SELECT Name, Urole_TC FROM dbo.Permission_TB WHERE  (DocID = @DocID) AND (Urole_TC = N'ที่ปรึกษา')",
+        Dim AJ1 As DataTable = db.GetDataTable("SELECT Name, Urole_TC FROM Permission_TB WHERE  (DocID = @DocID) AND (Urole_TC = 'ที่ปรึกษา')",
                                                  db.NewParam("DocID", docID))
 
         ' ตรวจสอบว่ามีข้อมูลหรือไม่
@@ -199,7 +199,7 @@ Partial Class production_version_EditUploadfile
         doc.Add(New Paragraph(" "))
 
 
-        Dim AJ2 As DataTable = db.GetDataTable("SELECT Name, Urole_TC FROM dbo.Permission_TB WHERE  (DocID = @DocID) AND (Urole_TC = N'กรรมการ')",
+        Dim AJ2 As DataTable = db.GetDataTable("SELECT Name, Urole_TC FROM Permission_TB WHERE  (DocID = @DocID) AND (Urole_TC = 'กรรมการ')",
                                          db.NewParam("DocID", docID))
 
         If AJ2 IsNot Nothing AndAlso AJ2.Rows.Count > 0 Then
@@ -240,7 +240,7 @@ Partial Class production_version_EditUploadfile
         subTitle12.Alignment = Element.ALIGN_CENTER
         doc.Add(subTitle12)
 
-        'Dim AJ3 As DataTable = db.GetDataTable("SELECT Name, Urole_TC FROM dbo.Permission_TB WHERE  (DocID = @DocID) AND (Urole_TC = N'กรรมการ')",
+        'Dim AJ3 As DataTable = db.GetDataTable("SELECT Name, Urole_TC FROM Permission_TB WHERE  (DocID = @DocID) AND (Urole_TC = 'กรรมการ')",
         '                                 db.NewParam("DocID", docID))
 
         'If AJ3 IsNot Nothing AndAlso AJ3.Rows.Count > 0 Then

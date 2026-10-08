@@ -100,7 +100,7 @@
                                     </div>
                                 </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Last_Post_Name, Date_Send_NS, Action FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Status = N'รอการยืนยัน') AND (Action = N'ขอเปลี่ยนคู่โปรเจค')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Last_Post_Name, Date_Send_NS, Action FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Status = 'รอการยืนยัน') AND (Action = 'ขอเปลี่ยนคู่โปรเจค')">
                         <SelectParameters>
                             <asp:QueryStringParameter Name="DocID" QueryStringField="DocID" Type="String" />
                             <asp:QueryStringParameter Name="Permission_ID" QueryStringField="Permission_ID" Type="String" />
@@ -143,7 +143,7 @@
                             </div>
                         </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Status_Change, Date_Confirm, Last_Post_Name, Action FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Status_Change1 = N'1') AND (Action = N'ขอเปลี่ยนคู่โปรเจค')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Status_Change, Date_Confirm, Last_Post_Name, Action FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Status_Change1 = '1') AND (Action = 'ขอเปลี่ยนคู่โปรเจค')">
                         <SelectParameters>
                             <asp:QueryStringParameter Name="DocID" QueryStringField="DocID" Type="String" />
                             <asp:QueryStringParameter Name="Permission_ID" QueryStringField="Permission_ID" Type="String" />
@@ -196,7 +196,7 @@
                                     </div>
                                 </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource3" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Last_Post_Name, Date_Send_NS, Action, Last_Email, Last_Mobile, Last_StudentID FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Status = N'รอการยืนยัน') AND (Action = N'ขอลบคู่โปรเจค')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource3" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Last_Post_Name, Date_Send_NS, Action, Last_Email, Last_Mobile, Last_StudentID FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Status = 'รอการยืนยัน') AND (Action = 'ขอลบคู่โปรเจค')">
                         <SelectParameters>
                             <asp:QueryStringParameter Name="DocID" QueryStringField="DocID" Type="String" />
                             <asp:QueryStringParameter Name="Permission_ID" QueryStringField="Permission_ID" Type="String" />
@@ -242,7 +242,7 @@
                             </div>
                         </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource4" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Status_Change, Date_Confirm, Last_Post_Name, Action, Last_Email, Last_Mobile, Last_StudentID FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Status_Change1 = N'1') AND (Action = N'ขอลบคู่โปรเจค')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource4" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Status_Change, Date_Confirm, Last_Post_Name, Action, Last_Email, Last_Mobile, Last_StudentID FROM Status_Change_TB WHERE (DocID = @DocID) AND (Permission_ID = @Permission_ID) AND (Status_Change1 = '1') AND (Action = 'ขอลบคู่โปรเจค')">
                         <SelectParameters>
                             <asp:QueryStringParameter Name="DocID" QueryStringField="DocID" Type="String" />
                             <asp:QueryStringParameter Name="Permission_ID" QueryStringField="Permission_ID" Type="String" />

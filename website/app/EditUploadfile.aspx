@@ -29,7 +29,7 @@
                             window.location.href = 'MAS_Doc.aspx?docID=' + docID;
                         }
                     </script>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT MAS_DOC.DocID, Permission_TB.Email FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID WHERE (Permission_TB.Email = @Email)">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource1" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT MAS_DOC.DocID, Permission_TB.Email FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID WHERE (Permission_TB.Email = @Email)">
                         <SelectParameters>
                             <asp:SessionParameter SessionField="Email" Name="Email"></asp:SessionParameter>
                         </SelectParameters>

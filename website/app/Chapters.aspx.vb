@@ -39,7 +39,7 @@ Partial Class production_version_Chapters
         End If
         ' นิสิตเปิดดูแล้ว = อ่านความเห็นแล้ว
         If role = "1" AndAlso Chapters.IsMember(docID, email) Then
-            Shell.Exec("UPDATE r SET Is_Read = 1 FROM Doc_Review r JOIN Doc_Submission s ON s.Sub_ID = r.Sub_ID WHERE s.DocID = @D AND r.Is_Read = 0", Shell.P("@D", docID))
+            Shell.Exec("UPDATE Doc_Review r SET Is_Read = 1 FROM Doc_Submission s WHERE s.Sub_ID = r.Sub_ID AND s.DocID = @D AND r.Is_Read = 0", Shell.P("@D", docID))
         End If
     End Sub
 
@@ -54,7 +54,7 @@ Partial Class production_version_Chapters
 
         Dim stored As String = Guid.NewGuid().ToString("N") & Path.GetExtension(name).ToLowerInvariant()
         fuFile.SaveAs(Path.Combine(Chapters.StorageFolder(docID), stored))
-        Dim version As Integer = Dash.Count("SELECT ISNULL(MAX(Version), 0) + 1 FROM Doc_Submission WHERE DocID = @D AND Chapter = @C", Shell.P("@D", docID), Shell.P("@C", chapter))
+        Dim version As Integer = Dash.Count("SELECT COALESCE(MAX(Version), 0) + 1 FROM Doc_Submission WHERE DocID = @D AND Chapter = @C", Shell.P("@D", docID), Shell.P("@C", chapter))
         Shell.Exec("INSERT INTO Doc_Submission (DocID, Chapter, Version, File_Name, Stored_Name, File_Size, Note, Uploaded_By, Uploaded_Email) " &
                    "VALUES (@D, @C, @V, @F, @S, @Z, @N, @By, @E)",
                    Shell.P("@D", docID), Shell.P("@C", chapter), Shell.P("@V", version), Shell.P("@F", Left(name, 260)), Shell.P("@S", stored),

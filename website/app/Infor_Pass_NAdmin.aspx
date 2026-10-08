@@ -83,7 +83,7 @@
                             </div>
                         </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Permission_TB.DocID, Permission_TB.Name, Permission_TB.Urole, Permission_TB.Submit_TC FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID WHERE (Permission_TB.DocID = @DocID) AND (Permission_TB.Urole = N'2')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Permission_TB.DocID, Permission_TB.Name, Permission_TB.Urole, Permission_TB.Submit_TC FROM MAS_DOC INNER JOIN Permission_TB ON MAS_DOC.DocID = Permission_TB.DocID WHERE (Permission_TB.DocID = @DocID) AND (Permission_TB.Urole = '2')">
                         <SelectParameters>
                             <asp:QueryStringParameter Name="DocID" QueryStringField="DocID" Type="String" />
                         </SelectParameters>

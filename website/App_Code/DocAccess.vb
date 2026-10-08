@@ -1,5 +1,4 @@
-﻿Imports System.Data.SqlClient
-Imports System.Configuration
+﻿Imports System.Configuration
 Imports System.IO
 Imports System.Web
 
@@ -35,17 +34,10 @@ Public Module DocAccess
         Dim id As Integer
         If Not Integer.TryParse(docID, id) OrElse String.IsNullOrEmpty(email) Then Return False
 
-        Dim cs As String = ConfigurationManager.ConnectionStrings("DOCDBConnectionString").ConnectionString
-        Using con As New SqlConnection(cs)
-            Using cmd As New SqlCommand(
-                "SELECT CASE WHEN EXISTS (SELECT 1 FROM Permission_TB WHERE DocID = @DocID AND Email = @Email) " &
-                "OR EXISTS (SELECT 1 FROM SubAdd_AJ_TB WHERE DocID = @DocID AND Email = @Email) THEN 1 ELSE 0 END", con)
-                cmd.Parameters.AddWithValue("@DocID", id)
-                cmd.Parameters.AddWithValue("@Email", email)
-                con.Open()
-                Return Convert.ToInt32(cmd.ExecuteScalar()) = 1
-            End Using
-        End Using
+        Return Convert.ToInt32(PgDb.Scalar(
+            "SELECT CASE WHEN EXISTS (SELECT 1 FROM Permission_TB WHERE DocID = @DocID AND Email = @Email) " &
+            "OR EXISTS (SELECT 1 FROM SubAdd_AJ_TB WHERE DocID = @DocID AND Email = @Email) THEN 1 ELSE 0 END",
+            PgDb.Param("DocID", id), PgDb.Param("Email", email))) = 1
     End Function
 
 End Module

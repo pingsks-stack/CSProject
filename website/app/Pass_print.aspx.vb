@@ -1,5 +1,5 @@
 ﻿
-Imports System.Data.SqlClient
+Imports Npgsql
 Imports System.IO
 Imports DevExpress.Web
 

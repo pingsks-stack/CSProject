@@ -67,7 +67,7 @@
                                 </div>
                             </ItemTemplate>
                         </asp:DataList>
-                        <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Email, Name, Mobile, Urole FROM Signin_Signup WHERE (Urole = N'2')"></asp:SqlDataSource>
+                        <asp:SqlDataSource runat="server" ID="SqlDataSource1" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Email, Name, Mobile, Urole FROM Signin_Signup WHERE (Urole = '2')"></asp:SqlDataSource>
                     </div>
                 </div>
             </div>

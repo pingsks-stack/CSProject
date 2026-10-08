@@ -11,8 +11,8 @@ Partial Class production_version_Main_Doc
         Dim email As String = Convert.ToString(Session("Email"))
         Dim dt = Shell.Query(
             "SELECT m.DocID, m.Doc_Name, m.Doc_NameEN, m.Doc_Type, m.Submit_TC, m.Class_Year_No, m.Name_teacherPJ, " &
-            "(SELECT COUNT(*) FROM Permission_TB t WHERE t.DocID = m.DocID AND t.Urole = N'2') AS Teachers, " &
-            "(SELECT COUNT(*) FROM SubAdd_AJ_TB s WHERE s.DocID = m.DocID AND s.Status = N'รอการยืนยัน') AS Invites, " &
+            "(SELECT COUNT(*) FROM Permission_TB t WHERE t.DocID = m.DocID AND t.Urole = '2') AS Teachers, " &
+            "(SELECT COUNT(*) FROM SubAdd_AJ_TB s WHERE s.DocID = m.DocID AND s.Status = 'รอการยืนยัน') AS Invites, " &
             "(SELECT COUNT(*) FROM Doc_File f WHERE f.DocID = m.DocID) AS Files, " &
             "(SELECT COUNT(DISTINCT s.Chapter) FROM Doc_Submission s WHERE s.DocID = m.DocID) AS Chapters, " &
             "(SELECT COUNT(*) FROM Doc_List_TB c WHERE c.DocID = m.DocID) AS Codes " &

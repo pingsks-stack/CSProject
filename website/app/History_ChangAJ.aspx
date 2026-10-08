@@ -81,7 +81,7 @@
                             </div>
                         </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource4" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Date_Confirm, Last_Post_Name, Action FROM Status_Change_TB WHERE (DocID = @DocID) AND (Action = N'ขอเปลี่ยนคู่โปรเจค')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource4" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Date_Confirm, Last_Post_Name, Action FROM Status_Change_TB WHERE (DocID = @DocID) AND (Action = 'ขอเปลี่ยนคู่โปรเจค')">
                         <SelectParameters>
                             <asp:QueryStringParameter Name="DocID" QueryStringField="DocID" Type="String" />
                         </SelectParameters>
@@ -124,7 +124,7 @@
                                     </div>
                                 </EmptyDataTemplate>
                     </asp:GridView>
-                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Date_Confirm, Last_Post_Name, Action, Last_Email, Last_Mobile, Last_StudentID FROM Status_Change_TB WHERE (DocID = @DocID) AND (Action = N'ขอลบคู่โปรเจค')">
+                    <asp:SqlDataSource runat="server" ID="SqlDataSource2" ProviderName="Npgsql" ConnectionString='<%$ ConnectionStrings:DOCDBConnectionString %>' SelectCommand="SELECT Status_ID, DocID, Permission_ID, Name, Email, Mobile, Student_ID, Post_Name, Urole, Status, Date_Confirm, Last_Post_Name, Action, Last_Email, Last_Mobile, Last_StudentID FROM Status_Change_TB WHERE (DocID = @DocID) AND (Action = 'ขอลบคู่โปรเจค')">
                         <SelectParameters>
                             <asp:QueryStringParameter Name="DocID" QueryStringField="DocID" Type="String" />
                         </SelectParameters>

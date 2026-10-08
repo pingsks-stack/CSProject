@@ -6,7 +6,7 @@ Partial Class production_version_EditUploadfile
 
 
     Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
         If FileUpload1.HasFile Then
             Dim hfc As HttpFileCollection = Request.Files
             Dim docID As String = Request.QueryString("DocID")
@@ -42,7 +42,7 @@ Partial Class production_version_EditUploadfile
 
                     If existingLogID = Nothing Then
                         ' Insert the record into Doc_File_Log for updated file
-                        Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File, Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File, @Post_Name, GETDATE(), 'แทนที่ไฟล์')",
+                        Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File, Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File, @Post_Name, NOW(), 'แทนที่ไฟล์')",
                             db.NewParam("DocID", docID),
                             db.NewParam("Doc_File_ID", existingFileID),
                             db.NewParam("Post_Name", Session("Name")),
@@ -59,12 +59,12 @@ Partial Class production_version_EditUploadfile
                     hpf.SaveAs(Server.MapPath("Docs\") & fileName)
 
                     ' Insert the record into Doc_File
-                    Dim saveFile = db.GetValue("INSERT INTO Doc_File (DocID, Doc_File) VALUES (@DocID, @Doc_File); SELECT SCOPE_IDENTITY()",
+                    Dim saveFile = db.GetValue("INSERT INTO Doc_File (DocID, Doc_File) VALUES (@DocID, @Doc_File) RETURNING Doc_File_ID",
                         db.NewParam("DocID", docID),
                         db.NewParam("Doc_File", fileName))
 
                     ' Insert the record into Doc_File_Log
-                    Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File, Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File, @Post_Name, GETDATE(), 'เพิ่มไฟล์')",
+                    Dim saveLog = db.Execute("INSERT INTO Doc_File_Log (Doc_File_ID, DocID, Doc_File, Post_Name, Date_Delete, Action) VALUES (@Doc_File_ID, @DocID, @Doc_File, @Post_Name, NOW(), 'เพิ่มไฟล์')",
                         db.NewParam("DocID", docID),
                         db.NewParam("Doc_File_ID", saveFile),
                         db.NewParam("Post_Name", Session("Name")),

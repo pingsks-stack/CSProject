@@ -60,7 +60,7 @@ Public Class ChatApi
     Private Function ValidPartner(email As String, myRole As String) As DataRow
         If String.IsNullOrEmpty(email) Then Return Nothing
         Dim want As String = If(myRole = "1", "2", "1")
-        Dim dt = Shell.Query("SELECT TOP 1 Email, Name FROM Signin_Signup WHERE Email = @Email AND Urole = @Role",
+        Dim dt = Shell.Query("SELECT Email, Name FROM Signin_Signup WHERE Email = @Email AND Urole = @Role LIMIT 1",
                              Shell.P("@Email", email), Shell.P("@Role", want))
         Return If(dt.Rows.Count = 1, dt.Rows(0), Nothing)
     End Function
@@ -77,9 +77,9 @@ Public Class ChatApi
             "SELECT p.Partner, u.Name, last.Comment_Text, last.Date_Save, last.Sender_Email, " &
             "(SELECT COUNT(*) FROM Talk_TB x WHERE x." & MyCol(role) & " = @Me AND x." & OtherCol(role) & " = p.Partner AND x.Is_Read = 0 AND x.Sender_Email <> @Me) AS Unread " &
             "FROM (SELECT DISTINCT " & OtherCol(role) & " AS Partner FROM Talk_TB WHERE " & MyCol(role) & " = @Me) p " &
-            "OUTER APPLY (SELECT TOP 1 Comment_Text, Date_Save, Sender_Email FROM Talk_TB t WHERE t." & MyCol(role) & " = @Me AND t." & OtherCol(role) & " = p.Partner ORDER BY t.Talk_ID DESC) last " &
+            "LEFT JOIN LATERAL (SELECT Comment_Text, Date_Save, Sender_Email FROM Talk_TB t WHERE t." & MyCol(role) & " = @Me AND t." & OtherCol(role) & " = p.Partner ORDER BY t.Talk_ID DESC LIMIT 1) last ON true " &
             "LEFT JOIN Signin_Signup u ON u.Email = p.Partner " &
-            "ORDER BY last.Date_Save DESC"
+            "ORDER BY last.Date_Save DESC NULLS LAST"
         Return Shell.Query(sql, Shell.P("@Me", me_)).Rows.Cast(Of DataRow)().Select(Function(r) New With {
             .email = Convert.ToString(r("Partner")),
             .name = If(Convert.ToString(r("Name")) = "", Convert.ToString(r("Partner")), Convert.ToString(r("Name"))),
@@ -95,11 +95,11 @@ Public Class ChatApi
         If role = "1" Then
             ' นิสิตเลือกได้ทุกอาจารย์ (อาจารย์ในโครงงานของตัวเองขึ้นก่อน)
             sql = "SELECT s.Email, s.Name, CASE WHEN EXISTS (SELECT 1 FROM Permission_TB t WHERE t.Email = s.Email AND t.DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Me)) THEN 1 ELSE 0 END AS Mine " &
-                  "FROM Signin_Signup s WHERE s.Urole = N'2' ORDER BY Mine DESC, s.Name"
+                  "FROM Signin_Signup s WHERE s.Urole = '2' ORDER BY Mine DESC, s.Name"
         Else
             ' อาจารย์เลือกได้นิสิตในโครงงานที่ตัวเองดูแล
             sql = "SELECT DISTINCT s.Email, s.Name, 1 AS Mine FROM Signin_Signup s JOIN Permission_TB p ON p.Email = s.Email " &
-                  "WHERE s.Urole = N'1' AND p.DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Me AND Urole = N'2') ORDER BY s.Name"
+                  "WHERE s.Urole = '1' AND p.DocID IN (SELECT DocID FROM Permission_TB WHERE Email = @Me AND Urole = '2') ORDER BY s.Name"
         End If
         Return Shell.Query(sql, Shell.P("@Me", me_)).Rows.Cast(Of DataRow)().Select(Function(r) New With {
             .email = Convert.ToString(r("Email")),
@@ -111,7 +111,7 @@ Public Class ChatApi
     Private Function Thread(me_ As String, role As String, partner As DataRow, after As Integer) As Object
         Dim other As String = Convert.ToString(partner("Email"))
         Dim cond As String = MyCol(role) & " = @Me AND " & OtherCol(role) & " = @Other"
-        Dim rows = Shell.Query("SELECT TOP 300 Talk_ID, Comment_Text, Date_Save, Sender_Email FROM Talk_TB WHERE " & cond & " AND Talk_ID > @After ORDER BY Talk_ID",
+        Dim rows = Shell.Query("SELECT Talk_ID, Comment_Text, Date_Save, Sender_Email FROM Talk_TB WHERE " & cond & " AND Talk_ID > @After ORDER BY Talk_ID LIMIT 300",
                                Shell.P("@Me", me_), Shell.P("@Other", other), Shell.P("@After", after))
         Shell.Exec("UPDATE Talk_TB SET Is_Read = 1 WHERE " & cond & " AND Sender_Email = @Other AND Is_Read = 0",
                    Shell.P("@Me", me_), Shell.P("@Other", other))
@@ -130,7 +130,7 @@ Public Class ChatApi
     Private Sub Send(me_ As String, myName As String, role As String, partner As DataRow, text As String)
         Dim other As String = Convert.ToString(partner("Email"))
         Shell.Exec("INSERT INTO Talk_TB (Email_AJ, Email_NS, Name, Comment_Text, Date_Save, Post_Name_RS, Urole, Sender_Email, Is_Read) " &
-                   "VALUES (@AJ, @NS, @ToName, @Text, GETDATE(), @FromName, @Role, @Me, 0)",
+                   "VALUES (@AJ, @NS, @ToName, @Text, NOW(), @FromName, @Role, @Me, 0)",
                    Shell.P("@AJ", If(role = "2", me_, other)),
                    Shell.P("@NS", If(role = "1", me_, other)),
                    Shell.P("@ToName", Convert.ToString(partner("Name"))),

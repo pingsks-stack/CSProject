@@ -4,8 +4,8 @@ Partial Class production_version_Login
 
 
     'Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
-    'Dim Register = db.GetValue("insert into member (Name,ID_Student,Email,Password) VALUES (@Name,@ID_Student,@Email,@Password)SELECT SCOPE_IDENTITY()",
+    '    Dim db = PgDb.Platform()
+    'Dim Register = db.GetValue("insert into member (Name,ID_Student,Email,Password) VALUES (@Name,@ID_Student,@Email,@Password) /*TODO RETURNING*/",
     '           db.NewParam("Name", Studentname.Text),
     '           db.NewParam("ID_Student", Student_ID.Text),
     '           db.NewParam("Email", Email.Text),
@@ -15,8 +15,8 @@ Partial Class production_version_Login
     'End Sub
 
     'Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-    '    Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
-    '    Dim saveinsert = db.GetValue("insert into Signin_Signup (Username,Password,Email,Name,Student_ID,Mobile,Urole) VALUES (@Username,@Password,@Email,@Name,@Student_ID,@Mobile,1)SELECT SCOPE_IDENTITY()",
+    '    Dim db = PgDb.Platform()
+    '    Dim saveinsert = db.GetValue("insert into Signin_Signup (Username,Password,Email,Name,Student_ID,Mobile,Urole) VALUES (@Username,@Password,@Email,@Name,@Student_ID,@Mobile,1) RETURNING UserID",
     '                db.NewParam("Username", inputUsername.Text),
     '                db.NewParam("Password", PasswordHasher.Hash(inputPassword.Text)),
     '                db.NewParam("Email", inputEmail.Text),
@@ -38,7 +38,7 @@ Partial Class production_version_Login
         ' validator ฝั่ง client ข้ามได้ ต้องเช็กซ้ำฝั่ง server
         If Not Page.IsValid Then Return
 
-        Dim db = Zulu.Data.PlatformFactory.GetPlatform("DOCDBConnectionString", True, False)
+        Dim db = PgDb.Platform()
 
         ' ตรวจสอบการซ้ำของชื่อผู้ใช้งาน
         Dim usernameExists = db.GetValue("SELECT COUNT(*) FROM Signin_Signup WHERE Username = @Username",
@@ -77,7 +77,7 @@ Partial Class production_version_Login
         End If
 
         ' เพิ่มข้อมูลสมาชิกใหม่ลงในฐานข้อมูล
-        Dim saveinsert = db.GetValue("INSERT INTO Signin_Signup (Username, Password, Email, Name, Student_ID, Mobile, Urole) VALUES (@Username, @Password, @Email, @Name, @Student_ID, @Mobile, 1) SELECT SCOPE_IDENTITY()",
+        Dim saveinsert = db.GetValue("INSERT INTO Signin_Signup (Username, Password, Email, Name, Student_ID, Mobile, Urole) VALUES (@Username, @Password, @Email, @Name, @Student_ID, @Mobile, 1) RETURNING UserID",
                                      db.NewParam("Username", inputUsername.Text),
                                      db.NewParam("Password", PasswordHasher.Hash(inputPassword.Text)),
                                      db.NewParam("Email", inputEmail.Text),

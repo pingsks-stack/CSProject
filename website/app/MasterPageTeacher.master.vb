@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+﻿Imports Npgsql
 
 Partial Class production_version_MasterPageTeacher
     Inherits System.Web.UI.MasterPage
